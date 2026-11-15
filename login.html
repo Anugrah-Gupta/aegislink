@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResQ — Emergency Portal Login | AegisLink Ecosystem</title>
+  <meta name="description" content="Secure citizen disaster response and emergency gateway for ResQ application. Minimal light blue design compliant with emergency communication standards." />
+
+  <meta name="theme-color" content="#f0f5fa" />
+  <link rel="icon" type="image/svg+xml" href="./assets/resq-shield.svg" />
+
+  <!-- Google Fonts: Inter, Outfit, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./src/login.css" />
+</head>
+<body class="resq-login-body">
+
+  <!-- Ambient Emergency Radar Background Effect -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Top Global Bar -->
+  <header class="login-header-bar">
+    <a href="index.html" class="back-link" title="Return to AegisLink Command Center">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>AegisLink Command Center</span>
+    </a>
+
+    <div class="header-right-badges">
+      <div class="mesh-badge" id="network-status-indicator">
+        <span class="pulse-dot"></span>
+        <span class="badge-text">Mesh Ready (Node #014 Active)</span>
+      </div>
+      <a href="resq.html?guest=true" class="emergency-bypass-pill" id="quick-bypass-top" title="In immediate danger? Bypass login immediately.">
+        <span class="sos-mini-icon">🆘</span>
+        <span>Urgent SOS (No Login)</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Login Container -->
+  <main class="login-viewport">
+    <div class="login-card-container">
+
+      <!-- Official Card Header with Brand Logo -->
+      <div class="login-brand-header">
+        <div class="brand-logo-frame">
+          <img src="./assets/resq-shield.svg" alt="ResQ Official Logo" class="brand-logo-img" />
+          <div class="logo-pulse-ring"></div>
+        </div>
+        <h1 class="brand-title">ResQ</h1>
+        <p class="brand-subtitle">Citizen Emergency & Disaster Response Network</p>
+        
+        <div class="compliance-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>ISO-22320 Emergency Operations Standard</span>
+        </div>
+      </div>
+
+      <!-- Quick Role Selection Pills -->
+      <div class="role-selector-group">
+        <label class="role-selector-label">Access Profile:</label>
+        <div class="role-pills" id="role-pills-container">
+          <button type="button" class="role-pill active" data-role="Citizen" data-name="Citizen Resident">
+            <span class="role-icon">👤</span>
+            <span>Citizen</span>
+          </button>
+          <button type="button" class="role-pill" data-role="First Responder" data-name="Field Responder (USAR)">
+            <span class="role-icon">🚑</span>
+            <span>First Responder</span>
+          </button>
+          <button type="button" class="role-pill" data-role="Medical Personnel" data-name="Field Medical Staff">
+            <span class="role-icon">🏥</span>
+            <span>Medical</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Login Form -->
+      <form class="login-form" id="resq-login-form" novalidate>
+        
+        <!-- Identifier Input -->
+        <div class="form-group">
+          <label for="user-identifier" class="field-label">Citizen ID, Phone, or Email</label>
+          <div class="input-wrapper">
+            <span class="input-icon">📱</span>
+            <input 
+              type="text" 
+              id="user-identifier" 
+              name="identifier" 
+              class="form-input" 
+              placeholder="e.g. +91 98765 43210 or citizen@aegislink.org"
+              value="+91 98765 43210"
+              required 
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <!-- PIN / Password Input -->
+        <div class="form-group">
+          <div class="field-label-row">
+            <label for="user-pin" class="field-label">Emergency Access PIN / Password</label>
+            <button type="button" class="text-link-sm" id="btn-forgot-pin">Help / Offline PIN</button>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input 
+              type="password" 
+              id="user-pin" 
+              name="pin" 
+              class="form-input" 
+              placeholder="Enter 4-digit PIN or password"
+              value="8920"
+              required 
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-password-btn" id="btn-toggle-pin" title="Toggle visibility">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <!-- Checkbox Row -->
+        <div class="form-options-row">
+          <label class="remember-checkbox-label">
+            <input type="checkbox" id="chk-remember-device" checked />
+            <span class="checkbox-custom"></span>
+            <span class="checkbox-text">Cache credentials for offline mesh access</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-signin-primary" id="btn-submit-login">
+          <span class="btn-text">Sign In to ResQ Application</span>
+          <span class="btn-arrow">&rarr;</span>
+          <div class="btn-spinner" id="login-spinner"></div>
+        </button>
+
+      </form>
+
+      <!-- Feedback / Alert Message Box -->
+      <div class="login-alert-box" id="login-feedback" style="display: none;"></div>
+
+      <!-- Quick Demo Login Presets (Specially designed for presentation & testing) -->
+      <div class="demo-login-section">
+        <div class="demo-section-label">
+          <span>Quick Demo One-Click Sign In:</span>
+        </div>
+        <div class="demo-buttons-grid">
+          <button type="button" class="demo-btn citizen-demo" id="btn-demo-citizen">
+            <span class="demo-badge">Citizen</span>
+            <strong>Anugrah (Citizen)</strong>
+            <small>ID: RESQ-IND-9021</small>
+          </button>
+          <button type="button" class="demo-btn responder-demo" id="btn-demo-responder">
+            <span class="demo-badge">NDRF Squad</span>
+            <strong>Captain Sharma</strong>
+            <small>Unit: USAR Boat 01</small>
+          </button>
+        </div>
+      </div>
+
+      <!-- Life-Safety Emergency SOS Bypass Banner -->
+      <div class="emergency-bypass-card">
+        <div class="bypass-content">
+          <div class="bypass-badge">CRITICAL SAFETY PROTOCOL</div>
+          <h4>Life in Immediate Danger?</h4>
+          <p>Disaster victims do not need credentials to request rescue. Immediate 1-Tap SOS is always enabled.</p>
+        </div>
+        <button type="button" class="btn-instant-sos" id="btn-instant-sos-guest">
+          <span>🚨 Instant SOS (Guest Mode)</span>
+        </button>
+      </div>
+
+      <!-- Trust & Technology Footer -->
+      <div class="login-footer-ecosystem">
+        <div class="footer-trust-item">
+          <span class="trust-icon">🔒</span>
+          <span>ED25519 Cryptographic Mesh Signature</span>
+        </div>
+        <div class="footer-trust-item">
+          <span class="trust-icon">📡</span>
+          <span>Zero-Internet LoRa / BLE Autonomous Cache</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="./src/login.js"></script>
+</body>
+</html>

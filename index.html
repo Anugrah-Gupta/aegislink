@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AegisLink — Resilient Disaster Intelligence & Emergency Response Network</title>
+  <meta name="description" content="When infrastructure fails, AegisLink keeps people connected, informed, and protected. Complete disaster-management ecosystem with offline-first mesh communications, IoT nodes, and AI crisis intelligence." />
+  
+  <!-- Modern Google Fonts: Inter and Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="icon" type="image/svg+xml" href="./assets/aegislink-shield.svg" />
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- TOP FLOATING PILL NAVBAR (Modeled directly after reference image) -->
+    <header class="navbar-wrapper">
+      <nav class="pill-navbar" id="main-navbar">
+        <a href="#hero" class="nav-brand">
+          <div class="brand-symbol">
+            <img src="./assets/aegislink-shield.svg" alt="AegisLink Logo" width="22" height="22" />
+          </div>
+          <span class="brand-text">AegisLink</span>
+        </a>
+
+        <div class="nav-links">
+          <div class="nav-item has-dropdown">
+            <button class="nav-link-btn" data-dropdown="product-dd">
+              Product <span class="caret">▾</span>
+            </button>
+            <div class="dropdown-menu" id="product-dd">
+              <a href="login.html" class="dd-item">
+                <span class="dd-icon"><img src="./assets/resq-shield.svg" alt="ResQ" width="20" height="20" style="vertical-align: middle;" /></span>
+                <div>
+                  <strong>ResQ Citizen App</strong>
+                  <p>1-Tap SOS & offline local mesh forwarding</p>
+                </div>
+              </a>
+              <a href="command-login.html" class="dd-item">
+                <span class="dd-icon">🖥️</span>
+                <div>
+                  <strong>Aegis Command Center</strong>
+                  <p>GIS tactical map, AI triage & responder dispatch</p>
+                </div>
+              </a>
+              <a href="#nodes-section" class="dd-item">
+                <span class="dd-icon">📡</span>
+                <div>
+                  <strong>Aegis Edge Nodes</strong>
+                  <p>Deployable solar LoRa/BLE mesh hardware</p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="nav-item has-dropdown">
+            <button class="nav-link-btn" data-dropdown="ecosystem-dd">
+              Ecosystem <span class="caret">▾</span>
+            </button>
+            <div class="dropdown-menu" id="ecosystem-dd">
+              <a href="#command-section" class="dd-item"><span>🏥</span> Hospitals & Triage</a>
+              <a href="#command-section" class="dd-item"><span>🏠</span> Shelter Capacity</a>
+              <a href="#command-section" class="dd-item"><span>🚑</span> Responders & Fleet</a>
+              <a href="#command-section" class="dd-item"><span>🤝</span> Volunteer Network</a>
+              <a href="#resources-section" class="dd-item"><span>📦</span> Relief Inventory</a>
+            </div>
+          </div>
+
+          <div class="nav-item has-dropdown">
+            <button class="nav-link-btn" data-dropdown="lifecycle-dd">
+              Lifecycle <span class="caret">▾</span>
+            </button>
+            <div class="dropdown-menu" id="lifecycle-dd">
+              <a href="#lifecycle-section" class="dd-item"><span>🟢</span> Prepare (Pre-Disaster)</a>
+              <a href="#lifecycle-section" class="dd-item"><span>🟠</span> Respond (Crisis Active)</a>
+              <a href="#lifecycle-section" class="dd-item"><span>🔵</span> Recover (Post-Disaster)</a>
+            </div>
+          </div>
+
+          <a href="#nodes-section" class="nav-item-link">IoT Nodes</a>
+          <a href="#security-section" class="nav-item-link">Security & Trust</a>
+          
+          <div class="nav-item lang-selector">
+            <button class="nav-link-btn">
+              EN <span class="caret">▾</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <div class="mesh-status-indicator" id="nav-mesh-status" title="Mesh Network Status">
+            <span class="live-dot pulse"></span>
+            <span class="status-label">Mesh: 48 Nodes Active</span>
+          </div>
+          <a href="login.html" class="btn-pill btn-pill-ghost" id="open-citizen-btn">Open ResQ App ↗</a>
+          <a href="command-login.html" class="btn-pill btn-pill-white" id="nav-command-btn">Command Center 🔒</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- HERO SECTION (Styled like Image 2: Bold clean typography + rich backdrop + floating card) -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg-media">
+        <img src="./assets/hero_team.jpg" alt="AegisLink Emergency Response Operations" class="hero-img" />
+        <div class="hero-gradient-overlay"></div>
+      </div>
+
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-icon">🛡️</span>
+            <span>Resilient Disaster Intelligence & Emergency Response Network</span>
+          </div>
+
+          <h1 class="hero-title">
+            When infrastructure fails, <br class="hide-mobile" />
+            <span class="text-highlight">AegisLink</span> keeps humanity connected, informed & protected.
+          </h1>
+
+          <p class="hero-subtext">
+            An offline-first disaster coordination ecosystem. Combining deployable IoT mesh nodes,
+            instant citizen SOS, GIS situational awareness, and AI intelligence to coordinate responders
+            even when cellular towers and electrical grids go dark.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="command-login.html" class="btn-pill btn-pill-dark btn-lg" id="hero-command-btn">
+              <span>Launch Command Center</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <button class="btn-pill btn-pill-white btn-lg" id="hero-resq-btn">
+              <span>Test ResQ Citizen SOS</span>
+              <span class="pill-dot red-dot"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Floating Hero Feature Card (Directly inspired by Image 2 "Explore the new campaign" card) -->
+        <div class="hero-floating-card">
+          <div class="card-thumb">
+            <img src="./assets/node_device.jpg" alt="Aegis Node M-1 Device" />
+            <span class="card-thumb-badge">Hardware</span>
+          </div>
+          <div class="card-details">
+            <span class="card-pretitle">Deployable Edge Infrastructure</span>
+            <h4 class="card-heading">Aegis Node M-1 Mesh</h4>
+            <p class="card-desc">Solar-powered LoRa + BLE emergency relay for blackouts.</p>
+            <a href="#nodes-section" class="card-link">Explore Hardware Specs &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUSTED BY / STANDARDS TICKER (Directly inspired by Image 1) -->
+    <section class="trust-ticker-section">
+      <div class="trust-wrapper">
+        <span class="trust-caption">Engineered for standards recognized by global emergency agencies &gt;</span>
+        <div class="ticker-logos">
+          <div class="ticker-item"><span class="logo-bold">NDRF</span> Incident Command</div>
+          <div class="ticker-item"><span class="logo-bold">RED CROSS</span> Field Protocol</div>
+          <div class="ticker-item"><span class="logo-bold">FEMA</span> ICS-209 Compatible</div>
+          <div class="ticker-item"><span class="logo-bold">UN OCHA</span> Relief Logistics</div>
+          <div class="ticker-item"><span class="logo-bold">COAST GUARD</span> SAR Protocol</div>
+          <div class="ticker-item"><span class="logo-bold">PostGIS</span> Geospatial Grid</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALUE PROPOSITIONS (Clean Typography Rows matching Image 1 layout) -->
+    <section class="value-rows-section">
+      <div class="section-container">
+        
+        <div class="value-row">
+          <div class="val-col-title">
+            <div class="val-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+            </div>
+            <h3>Built for when cellular networks & power vanish</h3>
+          </div>
+          <div class="val-col-desc">
+            <p>
+              Conventional emergency apps freeze when cell towers lose power. AegisLink switches seamlessly to offline local mesh mode. 
+              Distress reports hop peer-to-peer across smartphones and deployable Aegis Nodes, queuing locally and syncing instantly the moment any uplink is reached.
+            </p>
+            <div class="tech-chips">
+              <span class="tech-chip">BLE 5.3 Mesh</span>
+              <span class="tech-chip">LoRa 868/915 MHz</span>
+              <span class="tech-chip">Store-and-Forward SQLite</span>
+              <span class="tech-chip">Zero Internet Required</span>
+            </div>
+          </div>
+          <div class="val-col-action">
+            <a href="#nodes-section" class="learn-link">Learn more &rarr;</a>
+          </div>
+        </div>
+
+        <div class="value-row">
+          <div class="val-col-title">
+            <div class="val-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <h3>Grounded in physical multi-sensor truth</h3>
+          </div>
+          <div class="val-col-desc">
+            <p>
+              Sensor data is not an assumption—it is real-time ground truth. Solar-powered Aegis Nodes stream ultrasonic flood water levels, 
+              seismic vibrations, and structural accelerations directly into tactical maps so decision makers observe flash floods before 911 calls start piling up.
+            </p>
+            <div class="tech-chips">
+              <span class="tech-chip">Ultrasonic Water Level</span>
+              <span class="tech-chip">Seismic IMU</span>
+              <span class="tech-chip">Thermal & Smoke</span>
+              <span class="tech-chip">Battery + Solar Telemetry</span>
+            </div>
+          </div>
+          <div class="val-col-action">
+            <a href="#nodes-section" class="learn-link">Learn more &rarr;</a>
+          </div>
+        </div>
+
+        <div class="value-row">
+          <div class="val-col-title">
+            <div class="val-icon-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <h3>AI crisis intelligence to assist human command</h3>
+          </div>
+          <div class="val-col-desc">
+            <p>
+              In a crisis, operators receive thousands of panicked, fragmented messages. Aegis AI extracts medical urgency, 
+              trapped victims count, and precise coordinates, while deduplicating 100 identical reports of a blocked bridge into a single verified incident.
+            </p>
+            <div class="tech-chips">
+              <span class="tech-chip">NLP Urgency Classifier</span>
+              <span class="tech-chip">Geospatial Deduplication</span>
+              <span class="tech-chip">Sector Situation Digest</span>
+              <span class="tech-chip">Human-in-the-Loop</span>
+            </div>
+          </div>
+          <div class="val-col-action">
+            <a href="#ai-intelligence" class="learn-link">Learn more &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SECTION 1: AEGIS COMMAND CENTER -->
+    <section class="platform-module-section" id="command-section">
+      <div class="section-container">
+        <div class="module-header">
+          <div class="header-tag">Operations Room</div>
+          <h2 class="module-title">Aegis Command Center Dashboard</h2>
+          <p class="module-subtitle">
+            Live situational awareness for emergency coordinators, incident commanders, hospitals, and fleet dispatchers.
+            Test the live GIS disaster map, AI incident classifier, and responder routing below.
+          </p>
+        </div>
+
+        <!-- Government Security Gate & Session Bar -->
+        <div class="gov-gate-bar" id="gov-gate-bar">
+          <div class="gov-locked-state" id="gov-locked-state">
+            <div class="gate-lock-info">
+              <span class="lock-shield-ico">🔒</span>
+              <div>
+                <strong>RESTRICTED GOVERNMENT AIR-GAPPED ZONE · LEVEL 4 REQUIRED</strong>
+                <p>Tactical GIS, AI Triage & Fleet Dispatch are locked to public visitors. Authorized NDRF / SDMA personnel must authenticate.</p>
+              </div>
+            </div>
+            <a href="command-login.html" class="btn-gov-unlock-action">
+              <span>Authenticate with Government Clearance &rarr;</span>
+            </a>
+          </div>
+
+          <div class="gov-unlocked-state" id="gov-unlocked-state" style="display: none;">
+            <div class="auth-officer-info">
+              <span class="auth-dot-live"></span>
+              <span class="auth-title">CLEARANCE LEVEL 4 ACTIVE:</span>
+              <strong id="landing-officer-display">Commander Sharma (NDRF 8th Battalion)</strong>
+            </div>
+            <div class="auth-actions-group">
+              <a href="command.html" class="btn-fullscreen-link">Full-Screen Tactical View ↗</a>
+              <button type="button" class="btn-lock-landing" id="btn-lock-landing-console">Lock Console 🔒</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operations Metrics Bar -->
+        <div class="command-kpi-grid">
+          <div class="kpi-card" id="kpi-incidents">
+            <div class="kpi-top">
+              <span class="kpi-title">Active Incidents</span>
+              <span class="kpi-badge red">Live</span>
+            </div>
+            <div class="kpi-value" id="kpi-active-count">184</div>
+            <div class="kpi-foot">
+              <span class="foot-highlight text-red" id="kpi-crit-count">23 Critical Triage</span> · 91 In Progress
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-title">Responders On-Duty</span>
+              <span class="kpi-badge blue">Fleet</span>
+            </div>
+            <div class="kpi-value">67</div>
+            <div class="kpi-foot">
+              <span class="foot-highlight text-blue">42 En Route</span> · 18 On-Scene · 7 Staged
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-title">Shelters Operational</span>
+              <span class="kpi-badge amber">Capacity</span>
+            </div>
+            <div class="kpi-value">31</div>
+            <div class="kpi-foot">
+              <span class="foot-highlight text-amber">4,820 / 6,100</span> (79% Occupancy)
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <span class="kpi-title">Aegis Mesh Nodes</span>
+              <span class="kpi-badge green">RF LoRa</span>
+            </div>
+            <div class="kpi-value">48 / 48</div>
+            <div class="kpi-foot">
+              <span class="foot-highlight text-green">94% Mesh Health</span> · 0 Packet Loss
+            </div>
+          </div>
+        </div>
+
+        <!-- Command Console Interface Layout (Enclosed in Security Air-Gap Wrapper) -->
+        <div class="command-console-wrapper" id="command-console-wrapper">
+          
+          <!-- Air-Gap Lock Overlay -->
+          <div class="console-airgap-lock" id="console-airgap-lock">
+            <div class="lock-card-inner">
+              <div class="lock-card-seal">
+                <img src="./assets/aegislink-shield.svg" alt="AegisLink Seal" width="44" height="44" />
+              </div>
+              <span class="seal-badge">LEVEL 4 GOVERNMENT CLEARANCE REQUIRED</span>
+              <h3>Terminal Locked for Public Security</h3>
+              <p>Under NDMA Incident Protocol, live responder dispatch and confidential trauma telemetry are restricted to verified disaster authorities.</p>
+              <div class="lock-buttons-row">
+                <a href="command-login.html" class="btn-enter-gov-portal">
+                  <span>🏛️ Official Government Sign In &rarr;</span>
+                </a>
+                <a href="login.html" class="btn-goto-resq">
+                  <span>📱 ResQ Citizen Portal</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="command-console">
+          <!-- Left Column: Interactive GIS Tactical Map -->
+          <div class="console-map-col">
+            <div class="console-box-header">
+              <div class="box-title">
+                <span class="radar-dot"></span>
+                <strong>Sector 1–8 Tactical GIS Grid</strong>
+                <span class="sector-tag">Regional Alert Level: High (Flood & Flash Surge)</span>
+              </div>
+              
+              <!-- Map Layer Filter Toggles -->
+              <div class="map-layer-toggles">
+                <button class="layer-btn active" data-layer="sos">
+                  <span class="dot-swatch red-dot"></span> SOS (8)
+                </button>
+                <button class="layer-btn active" data-layer="hospitals">
+                  <span class="dot-swatch blue-dot"></span> Hospitals (3)
+                </button>
+                <button class="layer-btn active" data-layer="shelters">
+                  <span class="dot-swatch amber-dot"></span> Shelters (4)
+                </button>
+                <button class="layer-btn active" data-layer="nodes">
+                  <span class="dot-swatch green-dot"></span> Mesh Nodes (8)
+                </button>
+                <button class="layer-btn active" data-layer="hazards">
+                  <span class="dot-swatch purple-dot"></span> Hazards (2)
+                </button>
+                <button class="layer-btn active" data-layer="responders">
+                  <span class="dot-swatch cyan-dot"></span> Fleet (5)
+                </button>
+              </div>
+            </div>
+
+            <!-- Canvas GIS Map Viewport -->
+            <div class="map-viewport" id="tactical-map-viewport">
+              <canvas id="tactical-canvas"></canvas>
+              
+              <!-- Map Overlay HUD Controls -->
+              <div class="map-hud-controls">
+                <button class="hud-btn" id="btn-zoom-in">+</button>
+                <button class="hud-btn" id="btn-zoom-out">&minus;</button>
+                <button class="hud-btn" id="btn-reset-view" title="Reset View">&#8635;</button>
+              </div>
+
+              <!-- Map Legend Bar -->
+              <div class="map-legend-bar">
+                <span>Click markers for real-time status & dispatch</span>
+                <span class="legend-scale">Scale: 1km grid · CRS: EPSG:3857</span>
+              </div>
+            </div>
+
+            <!-- Selected Marker Detail Drawer -->
+            <div class="marker-detail-drawer" id="marker-drawer">
+              <div class="drawer-header">
+                <div class="drawer-title" id="drawer-title">Incident #SOS-182 (Sector 4)</div>
+                <button class="drawer-close" id="drawer-close-btn">&times;</button>
+              </div>
+              <div class="drawer-body" id="drawer-body">
+                <!-- Dynamically populated -->
+              </div>
+              <div class="drawer-actions" id="drawer-actions">
+                <!-- Dynamically populated buttons -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: AI Situational Intelligence & Incident Feed -->
+          <div class="console-sidebar-col">
+            <div class="sidebar-tabs">
+              <button class="tab-btn active" data-tab="ai-triage">AI Intelligence</button>
+              <button class="tab-btn" data-tab="live-incidents">Live Incidents (<span id="tab-incident-count">8</span>)</button>
+              <button class="tab-btn" data-tab="resources">Hospital & Shelter</button>
+            </div>
+
+            <!-- TAB 1: AI Crisis Intelligence Engine -->
+            <div class="tab-pane active" id="pane-ai-triage">
+              <div class="ai-box">
+                <div class="ai-box-badge">
+                  <span class="ai-sparkle">✨</span>
+                  <span>Aegis AI Incident Classifier & Deduplication</span>
+                </div>
+                <p class="ai-box-desc">
+                  Transforms unstructured citizen distress texts and radio transcripts into structured, prioritized triage.
+                </p>
+
+                <div class="sample-prompts-label">Try sample incoming distress messages:</div>
+                <div class="sample-pills">
+                  <button class="sample-pill" data-msg="My mother has asthma and is injured, we are trapped on second floor at River Road 42, water reaching 5 feet rapidly!">Trapped & Medical</button>
+                  <button class="sample-pill" data-msg="Bridge near Sector 4 has cracked and power lines are sparking across the road. Traffic blocked both ways.">Sector 4 Bridge Blocked</button>
+                  <button class="sample-pill" data-msg="Elderly shelter on Pine Street ran out of drinking water and dialysis generator fuel is at 10%. Need supply immediately.">Shelter Fuel & Water</button>
+                </div>
+
+                <div class="ai-input-wrap">
+                  <textarea id="ai-input-text" rows="3" placeholder="Enter or paste incoming citizen distress report..."></textarea>
+                  <button class="btn-pill btn-pill-dark btn-sm" id="btn-run-ai">
+                    <span>Analyze with AI</span>
+                  </button>
+                </div>
+
+                <!-- AI Output Card -->
+                <div class="ai-result-card" id="ai-result-card">
+                  <div class="ai-result-header">
+                    <span class="ai-res-status">Analysis Complete</span>
+                    <span class="ai-confidence">Confidence: 98.4%</span>
+                  </div>
+                  <div class="ai-tags-row" id="ai-tags-row">
+                    <span class="ai-tag tag-urgent">Urgency: CRITICAL (P1)</span>
+                    <span class="ai-tag tag-cat">Medical + Rescue</span>
+                    <span class="ai-tag tag-people">Victims: 2+ Trapped</span>
+                    <span class="ai-tag tag-loc">Sector 4 (River Rd)</span>
+                  </div>
+                  <div class="ai-summary-text" id="ai-summary-text">
+                    <strong>Recommended Action:</strong> Immediate dispatch of shallow-draft rescue boat and ALS paramedic unit. Hazard: Rapid water rise.
+                  </div>
+                  <div class="ai-dedupe-note" id="ai-dedupe-note">
+                    <span class="dedupe-icon">🔍</span>
+                    <span><strong>AI Duplicate Detector:</strong> Grouped 4 similar calls in a 250m radius into this single incident record to prevent duplicate resource dispatch.</span>
+                  </div>
+                </div>
+
+                <!-- Sector Situation Summary Generator -->
+                <div class="sector-digest-box">
+                  <div class="digest-head">
+                    <span>Sector 4 Situational Digest</span>
+                    <button class="btn-refresh-digest" id="btn-refresh-digest">Regenerate</button>
+                  </div>
+                  <div class="digest-content" id="digest-content">
+                    • <strong>Total Calls:</strong> 87 distress signals consolidated into 12 active incidents.<br/>
+                    • <strong>Primary Risk:</strong> River basin flood surge (+18 cm/hr).<br/>
+                    • <strong>Critical Needs:</strong> 3 water rescues active, 1 transformer explosion reported.<br/>
+                    • <strong>Shelter Status:</strong> West High School 85% full; divert evacuations to Sector 5.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: Live Incidents Queue -->
+            <div class="tab-pane" id="pane-live-incidents">
+              <div class="incident-feed-controls">
+                <input type="text" class="search-input" id="search-incidents" placeholder="Filter incidents by type or sector..." />
+                <div class="sort-selector">
+                  <span>Priority:</span>
+                  <select id="filter-urgency">
+                    <option value="all">All</option>
+                    <option value="critical">Critical (P1)</option>
+                    <option value="high">High (P2)</option>
+                    <option value="medium">Medium</option>
+                  </select>
+                </div>
+              </div>
+              <div class="incident-list" id="incident-list">
+                <!-- Dynamically populated incident cards -->
+              </div>
+            </div>
+
+            <!-- TAB 3: Hospital & Shelter Capacity -->
+            <div class="tab-pane" id="pane-resources">
+              <div class="resource-block">
+                <h4 class="resource-subtitle">Hospitals & Trauma Centers</h4>
+                <div class="resource-items-list" id="hospital-list">
+                  <!-- Dynamically populated -->
+                </div>
+
+                <h4 class="resource-subtitle" style="margin-top: 1.25rem;">Emergency Shelters</h4>
+                <div class="resource-items-list" id="shelter-list">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SECTION 2: CITIZEN APP "ResQ" (Interactive Mobile Simulator) -->
+    <section class="platform-module-section light-bg" id="resq-section">
+      <div class="section-container">
+        <div class="split-presentation">
+          
+          <!-- Left Presentation Description -->
+          <div class="split-text-col">
+            <div class="header-tag blue-tag">Citizen Interface</div>
+            <h2 class="module-title">ResQ: The Zero-Friction Emergency App</h2>
+            <p class="module-lead">
+              When disaster strikes, panic is high and time is scarce. ResQ gives citizens a dead-simple, 
+              stress-tested interface that works seamlessly with or without cellular connectivity.
+            </p>
+
+            <div class="feature-bullets">
+              <div class="bullet-item">
+                <div class="bullet-icon red-icon">🆘</div>
+                <div>
+                  <strong>One-Tap Instant SOS</strong>
+                  <p>Broadcasts exact GPS, medical urgency, family count, and battery level in a 3-second countdown.</p>
+                </div>
+              </div>
+
+              <div class="bullet-item">
+                <div class="bullet-icon amber-icon">📴</div>
+                <div>
+                  <strong>Offline Emergency Mesh Mode</strong>
+                  <p>When cellular infrastructure collapses, ResQ broadcasts encrypted packets via Bluetooth & LoRa to nearby Aegis Nodes.</p>
+                </div>
+              </div>
+
+              <div class="bullet-item">
+                <div class="bullet-icon green-icon">👨‍👩‍👧‍👦</div>
+                <div>
+                  <strong>Family Safety Circle & "I Am Safe"</strong>
+                  <p>Instantly alert family members of your safety without clogging emergency 911 dispatch lines.</p>
+                </div>
+              </div>
+
+              <div class="bullet-item">
+                <div class="bullet-icon purple-icon">🎒</div>
+                <div>
+                  <strong>Pre-Disaster Readiness Checklists</strong>
+                  <p>Essential survival supplies checklist, offline shelter guides, and official civil defense instructions.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Network Toggle for ResQ Demo -->
+            <div class="interactive-simulator-controls">
+              <div class="sim-ctrl-label">Test the Offline Resilience Simulator:</div>
+              <div class="network-toggle-box">
+                <span>Cellular & Internet Status:</span>
+                <button class="toggle-net-btn online" id="btn-toggle-network">
+                  <span class="net-status-badge" id="net-status-text">🟢 Online (Cellular Active)</span>
+                  <span class="toggle-action-hint">Click to cut internet & test offline mesh</span>
+                </button>
+              </div>
+              <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.8125rem; color: #475569; font-weight: 500;">Want the full standalone citizen experience?</span>
+                <a href="login.html" class="btn-pill btn-pill-dark" style="text-decoration: none;">Launch Full ResQ App ↗</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Interactive Smartphone Screen -->
+          <div class="split-phone-col">
+            <div class="phone-frame">
+              <!-- Phone Hardware Elements -->
+              <div class="phone-notch">
+                <div class="phone-speaker"></div>
+                <div class="phone-cam"></div>
+              </div>
+
+              <!-- Phone Screen Content -->
+              <div class="phone-screen" id="resq-screen">
+                
+                <!-- Phone Status Header -->
+                <div class="resq-status-bar">
+                  <span class="status-time" id="phone-clock">12:28</span>
+                  <div class="status-network-icons" id="phone-net-icons">
+                    <span class="net-mode-pill" id="phone-mode-pill">LTE 5G</span>
+                    <span class="battery-icon">98% 🔋</span>
+                  </div>
+                </div>
+
+                <!-- Offline Alert Banner (shown when offline) -->
+                <div class="offline-banner" id="resq-offline-banner" style="display: none;">
+                  <div class="off-banner-icon">⚠️</div>
+                  <div class="off-banner-text">
+                    <strong>INTERNET UNAVAILABLE</strong>
+                    <span>Broadcasting via Aegis BLE/LoRa Node #014</span>
+                  </div>
+                </div>
+
+                <!-- ResQ App Navigation Header -->
+                <div class="resq-app-header">
+                  <div class="resq-logo">
+                    <span class="shield-mini"><img src="./assets/resq-shield.svg" alt="ResQ" width="16" height="16" style="vertical-align: middle;" /></span>
+                    <span>ResQ</span>
+                  </div>
+                  <div class="resq-family-btn" id="btn-family-safe-trigger" title="Family Safety">
+                    👨‍👩‍👧 Family (3)
+                  </div>
+                </div>
+
+                <!-- Main ResQ Viewport Content -->
+                <div class="resq-screen-body" id="resq-body">
+                  
+                  <!-- Big SOS Help Button -->
+                  <div class="resq-sos-section">
+                    <button class="sos-master-btn" id="btn-master-sos">
+                      <div class="sos-glow"></div>
+                      <span class="sos-text">EMERGENCY SOS</span>
+                      <span class="sos-sub">Tap or Hold to Alert Responders</span>
+                    </button>
+                    <div class="sos-status-hint" id="sos-countdown-hint">Transmits GPS coordinates + Emergency Category</div>
+                  </div>
+
+                  <!-- Quick Emergency Category Reporting -->
+                  <div class="resq-categories-section">
+                    <div class="section-label-mini">Specific Emergency Categories</div>
+                    <div class="category-grid">
+                      <button class="cat-card" data-cat="medical">
+                        <span class="cat-icon">🏥</span>
+                        <span class="cat-name">Medical</span>
+                      </button>
+                      <button class="cat-card" data-cat="flood">
+                        <span class="cat-icon">🌊</span>
+                        <span class="cat-name">Flood</span>
+                      </button>
+                      <button class="cat-card" data-cat="fire">
+                        <span class="cat-icon">🔥</span>
+                        <span class="cat-name">Fire</span>
+                      </button>
+                      <button class="cat-card" data-cat="damage">
+                        <span class="cat-icon">🏚️</span>
+                        <span class="cat-name">Damage</span>
+                      </button>
+                      <button class="cat-card" data-cat="supplies">
+                        <span class="cat-icon">💧</span>
+                        <span class="cat-name">Relief</span>
+                      </button>
+                      <button class="cat-card" data-cat="shelter">
+                        <span class="cat-icon">🏠</span>
+                        <span class="cat-name">Shelter</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Family Safety Quick Bar -->
+                  <div class="resq-family-card">
+                    <div class="fam-card-left">
+                      <strong>Family Status</strong>
+                      <span>2 Safe · 1 Unknown</span>
+                    </div>
+                    <button class="btn-iam-safe" id="btn-i-am-safe">
+                      ✓ I AM SAFE
+                    </button>
+                  </div>
+
+                  <!-- Offline Sync Queue Badge (When reports are queued locally) -->
+                  <div class="offline-queue-card" id="offline-queue-card" style="display: none;">
+                    <div class="queue-info">
+                      <strong id="queue-count-text">2 Reports Waiting</strong>
+                      <span>Stored locally in phone flash</span>
+                    </div>
+                    <button class="btn-sync-now" id="btn-sync-now">Sync Now</button>
+                  </div>
+
+                  <!-- Disaster Preparedness Mini Checklist -->
+                  <div class="resq-checklist-preview">
+                    <div class="chk-header">
+                      <span>Emergency Kit Checklist</span>
+                      <span class="chk-prog" id="chk-prog-text">3/5 Packed</span>
+                    </div>
+                    <div class="checklist-items">
+                      <label class="chk-row">
+                        <input type="checkbox" checked class="chk-input" />
+                        <span>3-Day Drinking Water (1 gal/person)</span>
+                      </label>
+                      <label class="chk-row">
+                        <input type="checkbox" checked class="chk-input" />
+                        <span>First-Aid & Essential Medications</span>
+                      </label>
+                      <label class="chk-row">
+                        <input type="checkbox" checked class="chk-input" />
+                        <span>Flashlight & Spare Batteries</span>
+                      </label>
+                      <label class="chk-row">
+                        <input type="checkbox" class="chk-input" />
+                        <span>Important Documents in Waterproof Bag</span>
+                      </label>
+                      <label class="chk-row">
+                        <input type="checkbox" class="chk-input" />
+                        <span>Emergency Whistle & Dust Masks</span>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Bottom ResQ App Tab Bar -->
+                <div class="resq-bottom-nav">
+                  <button class="resq-tab active" data-resq-tab="home">
+                    <span>🆘</span>
+                    <span>SOS</span>
+                  </button>
+                  <button class="resq-tab" data-resq-tab="shelters">
+                    <span>🏠</span>
+                    <span>Shelters</span>
+                  </button>
+                  <button class="resq-tab" data-resq-tab="alerts">
+                    <span>📢</span>
+                    <span>Alerts</span>
+                  </button>
+                  <button class="resq-tab" data-resq-tab="family">
+                    <span>👨‍👩‍👧</span>
+                    <span>Family</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SECTION 3: AEGIS NODE & IOT MESH NETWORK HARDWARE -->
+    <section class="platform-module-section" id="nodes-section">
+      <div class="section-container">
+        <div class="module-header">
+          <div class="header-tag green-tag">Edge Hardware & Mesh</div>
+          <h2 class="module-title">Aegis Node M-1: Deployable Emergency Infrastructure</h2>
+          <p class="module-subtitle">
+            Autonomous, ruggedized communication nodes deployed in disaster zones. 
+            Forms an ad-hoc LoRa & BLE mesh network that relays critical packets across miles to the nearest gateway.
+          </p>
+        </div>
+
+        <div class="hardware-grid">
+          <!-- Hardware Visual Card -->
+          <div class="hardware-spec-card">
+            <div class="hw-img-wrap">
+              <img src="./assets/node_device.jpg" alt="Aegis Node M-1 Physical Hardware" class="hw-photo" />
+              <div class="hw-status-overlay">
+                <span class="hw-badge-live">● LoRa Mesh Active</span>
+                <span class="hw-badge-pwr">15W Solar / 94% Batt</span>
+              </div>
+            </div>
+
+            <div class="hw-spec-details">
+              <h3>Aegis Node M-1 Technical Specifications</h3>
+              <div class="specs-table">
+                <div class="spec-row">
+                  <span class="spec-label">Core Microcontroller</span>
+                  <span class="spec-val">ESP32-S3 Dual-Core 240MHz + Hardware Crypto</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Long-Range RF</span>
+                  <span class="spec-val">Semtech SX1262 LoRa (868 / 915 MHz, +22dBm, 15km line-of-sight)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Local Edge Link</span>
+                  <span class="spec-val">Bluetooth Low Energy 5.3 + Wi-Fi 6 Emergency Captive Portal</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Geopositioning</span>
+                  <span class="spec-val">Multi-GNSS NEO-M8N (GPS, GLONASS, Galileo)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Power Subsystem</span>
+                  <span class="spec-val">LiFePO4 12,000mAh + 15W Monocrystalline Solar Panel</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Enclosure & Durability</span>
+                  <span class="spec-val">IP67 Waterproof, Impact Polycarbonate, -20°C to +65°C</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Mesh Hop Visualizer -->
+          <div class="mesh-simulator-card">
+            <div class="mesh-sim-header">
+              <div class="mesh-title">
+                <span>Multi-Hop Mesh Packet Routing Simulator</span>
+                <span class="mesh-badge">Store-and-Forward Protocol</span>
+              </div>
+              <button class="btn-pill btn-pill-dark btn-sm" id="btn-simulate-packet">
+                <span>Transmit Test SOS Packet &rarr;</span>
+              </button>
+            </div>
+
+            <!-- Interactive Mesh Topology Canvas -->
+            <div class="mesh-canvas-container">
+              <div class="mesh-diagram" id="mesh-diagram">
+                <!-- Phone Origin -->
+                <div class="mesh-node phone-node" id="node-origin">
+                  <div class="node-icon">📱</div>
+                  <div class="node-name">Citizen ResQ</div>
+                  <div class="node-tag">Origin (BLE)</div>
+                </div>
+
+                <div class="mesh-link-line link-1"></div>
+
+                <!-- Aegis Node 1 -->
+                <div class="mesh-node edge-node" id="node-hop-1">
+                  <div class="node-icon">📡</div>
+                  <div class="node-name">Node M1 #014</div>
+                  <div class="node-tag">Sector 4 Post</div>
+                </div>
+
+                <div class="mesh-link-line link-2"></div>
+
+                <!-- Aegis Node 2 -->
+                <div class="mesh-node edge-node" id="node-hop-2">
+                  <div class="node-icon">📡</div>
+                  <div class="node-name">Node M1 #022</div>
+                  <div class="node-tag">Hilltop Relay</div>
+                </div>
+
+                <div class="mesh-link-line link-3"></div>
+
+                <!-- Aegis Gateway -->
+                <div class="mesh-node gateway-node" id="node-gateway">
+                  <div class="node-icon">🛰️</div>
+                  <div class="node-name">Starlink Gateway</div>
+                  <div class="node-tag">Uplink Station</div>
+                </div>
+
+                <div class="mesh-link-line link-4"></div>
+
+                <!-- Command Center -->
+                <div class="mesh-node command-node" id="node-dest">
+                  <div class="node-icon">🖥️</div>
+                  <div class="node-name">Command Center</div>
+                  <div class="node-tag">Destination</div>
+                </div>
+              </div>
+
+              <!-- Real-time Packet Log -->
+              <div class="packet-telemetry-box" id="packet-log">
+                <div class="telemetry-item">
+                  <span class="tel-time">Ready</span>
+                  <span class="tel-msg">Click "Transmit Test SOS Packet" to simulate multi-hop radio packet propagation.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- IoT Real-time Sensor Feeds -->
+            <div class="iot-sensor-stream">
+              <div class="sensor-card">
+                <div class="sensor-top">
+                  <span class="sensor-title">🌊 Ultrasonic River Level</span>
+                  <span class="sensor-status alert">Rising +18 cm/h</span>
+                </div>
+                <div class="sensor-metric">
+                  <span class="metric-big">4.82</span> <span class="metric-unit">meters</span>
+                </div>
+                <div class="sensor-bar">
+                  <div class="bar-fill red" style="width: 82%;"></div>
+                </div>
+                <div class="sensor-foot">Threshold Alert: 4.50m (Exceeded)</div>
+              </div>
+
+              <div class="sensor-card">
+                <div class="sensor-top">
+                  <span class="sensor-title">🌋 Seismic Vibration IMU</span>
+                  <span class="sensor-status normal">Nominal</span>
+                </div>
+                <div class="sensor-metric">
+                  <span class="metric-big">0.14</span> <span class="metric-unit">g force</span>
+                </div>
+                <div class="sensor-bar">
+                  <div class="bar-fill green" style="width: 18%;"></div>
+                </div>
+                <div class="sensor-foot">Peak 24h: 1.82g (Aftershock)</div>
+              </div>
+
+              <div class="sensor-card">
+                <div class="sensor-top">
+                  <span class="sensor-title">💨 Wind & Precipitation</span>
+                  <span class="sensor-status warn">High Gale</span>
+                </div>
+                <div class="sensor-metric">
+                  <span class="metric-big">68</span> <span class="metric-unit">km/h · 42mm rain</span>
+                </div>
+                <div class="sensor-bar">
+                  <div class="bar-fill amber" style="width: 65%;"></div>
+                </div>
+                <div class="sensor-foot">Barometer: 988 hPa (Dropping)</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THE DISASTER LIFECYCLE (Prepare -> Respond -> Recover) -->
+    <section class="platform-module-section light-bg" id="lifecycle-section">
+      <div class="section-container">
+        <div class="module-header">
+          <div class="header-tag">Disaster Lifecycle Management</div>
+          <h2 class="module-title">Not Just An SOS App. A Full Disaster Lifecycle Platform.</h2>
+          <p class="module-subtitle">
+            AegisLink supports emergency preparedness before the crisis hits, high-speed coordination during impact, 
+            and transparent relief and infrastructure recovery afterwards.
+          </p>
+        </div>
+
+        <div class="lifecycle-tabs-nav">
+          <button class="cycle-tab-btn active" data-cycle="before">
+            <span class="cycle-indicator green"></span>
+            <strong>1. Before Disaster</strong>
+            <span class="cycle-sub">Prepare & Mitigate</span>
+          </button>
+          <button class="cycle-tab-btn" data-cycle="during">
+            <span class="cycle-indicator orange"></span>
+            <strong>2. During Disaster</strong>
+            <span class="cycle-sub">Respond & Coordinate</span>
+          </button>
+          <button class="cycle-tab-btn" data-cycle="after">
+            <span class="cycle-indicator blue"></span>
+            <strong>3. After Disaster</strong>
+            <span class="cycle-sub">Relief & Recover</span>
+          </button>
+        </div>
+
+        <!-- Lifecycle Content Cards -->
+        <div class="lifecycle-content-box">
+          
+          <!-- Phase 1: Before -->
+          <div class="cycle-pane active" id="cycle-before">
+            <div class="cycle-grid">
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🚨</div>
+                <h4>Official Early Warning System</h4>
+                <p>Broadcast geo-targeted civil defense warnings to citizens before landfall or river surges. Includes nearest evacuation shelters and safest route guidance.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🎒</div>
+                <h4>Emergency Preparedness Checklists</h4>
+                <p>Interactive checklists for household rations, document preservation, water supplies, and medical reserves stored securely offline on citizen devices.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">👨‍👩‍👧‍👦</div>
+                <h4>Family Safety Circle Registration</h4>
+                <p>Families pair contact beacons and designate rendezvous points so members can confirm safety with one touch when disaster strikes.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🗺️</div>
+                <h4>Vulnerability & Sensor Mapping</h4>
+                <p>Pre-calibrates municipal flood zones, vulnerable infrastructure, and deploys solar-powered Aegis Nodes along high-risk riverbanks.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 2: During -->
+          <div class="cycle-pane" id="cycle-during">
+            <div class="cycle-grid">
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🆘</div>
+                <h4>Offline Mesh SOS Triage</h4>
+                <p>1-tap emergency alerts propagate across peer devices and Aegis Nodes without cell service, preserving battery and pinpointing victim coordinates.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🤖</div>
+                <h4>AI Incident Classification & Deduplication</h4>
+                <p>Merges thousands of panic calls into distinct incidents with automatic urgency grading (P1 Critical, P2 Urgent, P3 Standard).</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🚑</div>
+                <h4>Multi-Agency Fleet Dispatch</h4>
+                <p>Coordinates ambulances, rescue boats, drones, and volunteer squads with real-time status: Dispatched &rarr; En Route &rarr; On-Scene &rarr; Resolved.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🏥</div>
+                <h4>Hospital & Shelter Dynamic Balancing</h4>
+                <p>Monitors trauma bed availability, blood stocks, and shelter food/water meters in real time to prevent overloading single facilities.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phase 3: After -->
+          <div class="cycle-pane" id="cycle-after">
+            <div class="cycle-grid">
+              <div class="cycle-card">
+                <div class="cycle-icon-top">📦</div>
+                <h4>Relief Inventory & Supply Matching</h4>
+                <p>Tracks water, rations, medicines, and blankets from central depots to field shelters, closing supply deficit requests automatically.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🏚️</div>
+                <h4>Structural Damage & Infrastructure Audit</h4>
+                <p>Citizens and inspection teams submit geolocated structural integrity photos to map collapsed bridges, downed powerlines, and blocked roads.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">🤝</div>
+                <h4>Verified Volunteer Deployment</h4>
+                <p>Matches certified volunteers (medical, heavy equipment, drivers) with vetted community requests without sending civilians into danger zones.</p>
+              </div>
+              <div class="cycle-card">
+                <div class="cycle-icon-top">📊</div>
+                <h4>Post-Disaster Analytics & Reporting</h4>
+                <p>Generates compliance-ready post-incident reports (FEMA ICS-209, UN OCHA MIRA format) for government review and FEMA funding allocations.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: MISINFORMATION CONTROL & TRUST ARCHITECTURE -->
+    <section class="platform-module-section" id="security-section">
+      <div class="section-container">
+        <div class="module-header">
+          <div class="header-tag purple-tag">Verification & Trust</div>
+          <h2 class="module-title">Combating Disaster Rumors & False Alarms</h2>
+          <p class="module-subtitle">
+            During chaos, misinformation can cost lives. AegisLink applies a rigorous 4-tier verification taxonomy
+            and cryptographically signed public alerts.
+          </p>
+        </div>
+
+        <div class="trust-levels-grid">
+          <div class="trust-card tier-official">
+            <div class="trust-header">
+              <span class="trust-badge">OFFICIAL ALERT</span>
+              <span class="crypto-tag">Signed ED25519</span>
+            </div>
+            <h4>Authorized Authority Broadcast</h4>
+            <p>Directly issued by certified civil defense, meteorological departments, or government disaster agencies. Cannot be spoofed.</p>
+            <div class="trust-example">Example: "Mandatory evacuation ordered for low-lying Sector 4 basin."</div>
+          </div>
+
+          <div class="trust-card tier-verified">
+            <div class="trust-header">
+              <span class="trust-badge">VERIFIED INCIDENT</span>
+              <span class="crypto-tag">Responder Confirmed</span>
+            </div>
+            <h4>First-Responder / Drone Verified</h4>
+            <p>Field responders, certified observers, or reconnaissance drones have physically confirmed the hazard on-scene.</p>
+            <div class="trust-example">Example: "Sector 4 bridge structural damage confirmed. Detour routes active."</div>
+          </div>
+
+          <div class="trust-card tier-sensor">
+            <div class="trust-header">
+              <span class="trust-badge">SENSOR DATA</span>
+              <span class="crypto-tag">Hardware Telemetry</span>
+            </div>
+            <h4>Automated IoT Sensor Telemetry</h4>
+            <p>Derived directly from hardware sensors (ultrasonic water gauges, seismic IMUs) with calibrated threshold alerts.</p>
+            <div class="trust-example">Example: "Node #014 water level ultrasonic sensor exceeded 4.5m mark."</div>
+          </div>
+
+          <div class="trust-card tier-community">
+            <div class="trust-header">
+              <span class="trust-badge">COMMUNITY REPORT</span>
+              <span class="crypto-tag">Pending Verification</span>
+            </div>
+            <h4>Citizen Crowdsourced Signal</h4>
+            <p>Reported by citizens in the area. Highlighted with confidence ratings and duplicate cluster indicators before deployment.</p>
+            <div class="trust-example">Example: "Unconfirmed report of tree across power lines on Oak St (4 reports)."</div>
+          </div>
+        </div>
+
+        <!-- Role-Based Access Showcase -->
+        <div class="rbac-box">
+          <div class="rbac-header">
+            <h3>Enterprise Role-Based Access Control (RBAC)</h3>
+            <p>Sensitive medical records and operational responder locations are protected with granular permissions.</p>
+          </div>
+          <div class="rbac-grid">
+            <div class="rbac-item">
+              <span class="rbac-role">👤 Citizen</span>
+              <span class="rbac-access">Can view public alerts, verify personal family circle, and submit personal SOS reports.</span>
+            </div>
+            <div class="rbac-item">
+              <span class="rbac-role">🚑 First Responder</span>
+              <span class="rbac-access">Can view assigned incident GPS, victim medical status, and update operational status.</span>
+            </div>
+            <div class="rbac-item">
+              <span class="rbac-role">🏥 Hospital Admin</span>
+              <span class="rbac-access">Can view inbound trauma cases, update bed/blood inventory, and request emergency supply.</span>
+            </div>
+            <div class="rbac-item">
+              <span class="rbac-role">🛡️ Incident Commander</span>
+              <span class="rbac-access">Full regional situational map, multi-agency dispatch, AI digest generation, and official alerts.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 6: INTERACTIVE SOS EMERGENCY REPORT MODAL (When citizen submits in ResQ or test button) -->
+    <div class="modal-overlay" id="sos-modal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title">
+            <span class="modal-alert-icon">🆘</span>
+            <span>Emergency Incident Report</span>
+          </div>
+          <button class="modal-close" id="btn-close-modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="network-badge-row">
+            <span class="net-pill-badge" id="modal-net-badge">🟢 Sending via Internet / Cellular</span>
+            <span class="gps-pill-badge">📍 GPS: 37.7749° N, 122.4194° W</span>
+          </div>
+
+          <form id="emergency-report-form">
+            <div class="form-group">
+              <label>Emergency Category</label>
+              <select id="report-category" class="form-control">
+                <option value="Medical Emergency">🏥 Medical Emergency (Injuries, Paramedic Needed)</option>
+                <option value="Flood & Water Trap">🌊 Flood & Water Level (Trapped on Roof/Second Floor)</option>
+                <option value="Fire & Hazard">🔥 Fire & Smoke (Active flames or collapse risk)</option>
+                <option value="Structural Damage">🏚️ Structural Damage (Building collapsed)</option>
+                <option value="Relief Supplies">💧 Relief Supplies (Food, Water, Blankets Needed)</option>
+              </select>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Number of People</label>
+                <input type="number" id="report-people" class="form-control" value="2" min="1" max="50" />
+              </div>
+              <div class="form-group">
+                <label>Medical Attention Needed?</label>
+                <select id="report-medical" class="form-control">
+                  <option value="Yes - Critical">Yes - Critical / Bleeding</option>
+                  <option value="Yes - Stable">Yes - Stable / Elderly</option>
+                  <option value="No">No - Physical Help Only</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Urgent Details or Landmark</label>
+              <textarea id="report-details" class="form-control" rows="2" placeholder="e.g. Water is rising fast, mother has broken leg, trapped on 2nd floor balcony..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="btn-pill btn-pill-ghost" id="btn-cancel-modal">Cancel</button>
+              <button type="submit" class="btn-pill btn-pill-danger" id="btn-submit-emergency">
+                <span>Broadcast Emergency SOS</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- FOOTER (Matching clean minimalist enterprise style) -->
+    <footer class="site-footer">
+      <div class="section-container">
+        <div class="footer-top-row">
+          <div class="footer-brand">
+            <div class="brand-symbol">
+              <img src="./assets/aegislink-shield.svg" alt="AegisLink Logo" width="22" height="22" />
+            </div>
+            <span class="brand-title">AegisLink</span>
+            <p class="brand-tagline">“When infrastructure fails, AegisLink keeps people connected, informed, and protected.”</p>
+          </div>
+
+          <div class="footer-cols">
+            <div class="footer-col">
+              <h5>Platform</h5>
+              <a href="#command-section">Aegis Command</a>
+              <a href="#resq-section">ResQ Citizen App</a>
+              <a href="#nodes-section">Aegis Node Hardware</a>
+              <a href="#command-section">AI Crisis Intelligence</a>
+            </div>
+            <div class="footer-col">
+              <h5>Ecosystem</h5>
+              <a href="#command-section">Hospitals & Trauma</a>
+              <a href="#command-section">Shelter Coordination</a>
+              <a href="#command-section">Multi-Agency Fleet</a>
+              <a href="#lifecycle-section">Volunteer Network</a>
+            </div>
+            <div class="footer-col">
+              <h5>Disaster Lifecycle</h5>
+              <a href="#lifecycle-section">Phase 1: Preparedness</a>
+              <a href="#lifecycle-section">Phase 2: Crisis Response</a>
+              <a href="#lifecycle-section">Phase 3: Relief & Recovery</a>
+              <a href="#security-section">Misinformation Control</a>
+            </div>
+            <div class="footer-col">
+              <h5>Standards & Open Mesh</h5>
+              <a href="#nodes-section">LoRa SX1262 Specs</a>
+              <a href="#nodes-section">BLE 5.3 Store & Forward</a>
+              <a href="#security-section">ED25519 Signed Alerts</a>
+              <a href="#security-section">FEMA ICS-209 Alignment</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom-row">
+          <div class="copyright">
+            &copy; 2026 AegisLink Emergency Network. Open disaster mitigation architecture.
+          </div>
+          <div class="footer-badge-status">
+            <span class="live-dot pulse"></span>
+            <span>Mesh Relay Status: Online (48 Deployable Nodes Synced)</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

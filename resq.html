@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResQ — Citizen Disaster & Emergency Response | AegisLink</title>
+  <meta name="description" content="Minimal light blue offline-first citizen emergency response network with real-time tactical map, shelter management, and survival tools." />
+  
+  <meta name="theme-color" content="#f0f5fa" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- Google Fonts: Inter, Outfit, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./assets/resq-shield.svg" />
+  
+  <!-- Leaflet Map Stylesheet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="./src/resq.css" />
+</head>
+<body class="resq-light-theme">
+  <div class="resq-app-wrapper">
+    
+    <!-- TOP FROSTED GLASS NAVIGATION BAR (Minimal Light Blue & White) -->
+    <header class="resq-navbar-shell">
+      <div class="resq-navbar-inner">
+        
+        <div class="nav-brand-group">
+          <a href="index.html" class="nav-back-pill" title="Return to AegisLink Command">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Command Center</span>
+          </a>
+          <div class="nav-logo-capsule">
+            <div class="logo-shield-blue">
+              <img src="./assets/resq-shield.svg" alt="ResQ Logo" width="32" height="32" />
+            </div>
+            <div>
+              <span class="logo-title-dark">ResQ</span>
+              <span class="logo-mesh-sub">Citizen Emergency Network</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Emergency Tools & Status Switcher -->
+        <div class="nav-tools-group">
+          <!-- Battery Saver Toggle -->
+          <button class="tool-btn-pill" id="btn-battery-saver" title="Disaster Low Power Mode">
+            <span class="tool-icon">🔋</span>
+            <span class="tool-txt">Power Saver</span>
+          </button>
+
+          <!-- Whistle & Siren Tools -->
+          <button class="tool-btn-pill" id="btn-whistle-toggle" title="Sound SOS Morse Whistle (3 Short, 3 Long, 3 Short)">
+            <span class="tool-icon">📢</span>
+            <span class="tool-txt">SOS Whistle</span>
+          </button>
+          
+          <button class="tool-btn-pill" id="btn-siren-toggle" title="Loud Acoustic Rescue Siren">
+            <span class="tool-icon">🚨</span>
+            <span class="tool-txt">Siren</span>
+          </button>
+          
+          <button class="tool-btn-pill" id="btn-strobe-toggle" title="Screen Emergency Strobe Flasher">
+            <span class="tool-icon">🔦</span>
+            <span class="tool-txt">Strobe</span>
+          </button>
+
+          <!-- Online / Offline Mesh Toggle -->
+          <button class="net-status-pill online" id="btn-net-toggle" title="Click to test offline emergency mesh">
+            <span class="status-live-dot pulse"></span>
+            <span id="net-pill-label">Online (Cellular)</span>
+          </button>
+
+          <!-- User Profile & Sign Out -->
+          <div class="user-session-badge" id="nav-user-session">
+            <span class="user-status-dot"></span>
+            <div class="user-meta">
+              <span class="user-name" id="session-user-name">Citizen</span>
+              <span class="user-role" id="session-user-role">Resident</span>
+            </div>
+            <button class="btn-logout-small" id="btn-logout" title="Sign Out of ResQ">
+              <span>Sign Out</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- OFFLINE EMERGENCY MESH BANNER -->
+    <div class="offline-alert-ribbon" id="mesh-offline-banner" style="display: none;">
+      <div class="ribbon-inner">
+        <span class="ribbon-icon">⚠️</span>
+        <div class="ribbon-text">
+          <strong>INTERNET & CELLULAR SERVICES DOWN</strong>
+          <span>AegisLink Emergency Mesh Mode Active · Broadcasting via Node #014 (LoRa 868MHz / BLE 5.3)</span>
+        </div>
+      </div>
+      <button class="ribbon-btn-reconnect" id="btn-restore-net">Reconnect</button>
+    </div>
+
+    <!-- REAL-TIME COMMAND CENTER DIRECTIVE BANNER (Synced from Government Terminal) -->
+    <div class="command-directive-ribbon" id="command-directive-banner" style="display: none;">
+      <div class="ribbon-inner">
+        <span class="ribbon-icon">📢</span>
+        <div class="ribbon-text">
+          <strong id="directive-banner-title">GOVERNMENT COMMAND DIRECTIVE</strong>
+          <span id="directive-banner-body">Response unit dispatched. Standby for instructions.</span>
+        </div>
+      </div>
+      <div class="ribbon-actions">
+        <span class="ribbon-timestamp" id="directive-banner-time">Just now</span>
+        <button class="ribbon-btn-ack" id="btn-ack-directive">Acknowledge</button>
+      </div>
+    </div>
+
+    <!-- MAIN RESPONSIVE DUAL-COLUMN CONTAINER (FULL WINDOW FIT) -->
+    <main class="resq-grid-workspace">
+
+      <!-- =============================================================== -->
+      <!-- COLUMN 1: MASTER SOS & CITIZEN TRIAGE -->
+      <!-- =============================================================== -->
+      <section class="grid-col-left">
+        
+        <!-- Offline Queued Reports Card (Shown when packets waiting) -->
+        <div class="light-card queue-card-alert" id="offline-queue-bar" style="display: none;">
+          <div class="queue-card-left">
+            <span class="q-icon">💾</span>
+            <div>
+              <strong id="queue-count-text">0 Reports Queued in Phone</strong>
+              <p>Stored locally in flash storage; ready for LoRa store-and-forward relay</p>
+            </div>
+          </div>
+          <button class="btn-primary-blue btn-sm" id="btn-sync-queue">Sync Now</button>
+        </div>
+
+        <!-- Master One-Tap SOS Hero Card -->
+        <div class="light-card master-sos-hero">
+          <div class="sos-hud-top">
+            <div class="gps-pill-light">
+              <span class="gps-beacon-dot"></span>
+              <span>GPS: <strong>37.7749° N, 122.4194° W</strong></span>
+            </div>
+            <div class="elevation-badge" title="Elevation above flood crest">
+              <span>⛰️ Elev: 18m</span>
+              <span class="safe-tag">+13.2m Surge Safe</span>
+            </div>
+          </div>
+
+          <div class="sos-circle-area">
+            <div class="pulse-ring ring-1"></div>
+            <div class="pulse-ring ring-2"></div>
+            <button class="big-sos-button" id="btn-master-sos">
+              <span class="sos-hero-text">EMERGENCY SOS</span>
+              <span class="sos-sub-instruction">Tap to Request Immediate Rescue</span>
+            </button>
+          </div>
+
+          <!-- Countdown Abort Overlay -->
+          <div class="countdown-sheet-light" id="sos-countdown-sheet" style="display: none;">
+            <div class="countdown-num-bubble">
+              <span id="countdown-val">3</span>
+            </div>
+            <div class="countdown-light-msg">BROADCASTING EMERGENCY DISTRESS IN 3 SECONDS</div>
+            <button class="btn-secondary-white btn-sm" id="btn-abort-sos">CANCEL / FALSE ALARM</button>
+          </div>
+
+          <div class="sos-hud-bottom">
+            <span>Includes real-time GPS coordinates, medical profile, and battery level.</span>
+          </div>
+        </div>
+
+        <!-- Specific Disaster Categories -->
+        <div class="light-card">
+          <div class="card-title-row">
+            <h3>Disaster Category Fast-Select</h3>
+            <span class="card-title-sub">Select for specialized triage</span>
+          </div>
+
+          <div class="category-tiles-grid">
+            <button class="category-tile-btn" data-cat="Medical Emergency">
+              <div class="cat-icon-frame red-accent">🏥</div>
+              <strong>Medical</strong>
+              <span>Injuries, CPR, Trauma</span>
+            </button>
+
+            <button class="category-tile-btn" data-cat="Flood & Water Trap">
+              <div class="cat-icon-frame blue-accent">🌊</div>
+              <strong>Flood Trap</strong>
+              <span>Water rising, roof trap</span>
+            </button>
+
+            <button class="category-tile-btn" data-cat="Fire & Smoke Hazard">
+              <div class="cat-icon-frame orange-accent">🔥</div>
+              <strong>Fire / Smoke</strong>
+              <span>Active blaze, trapped</span>
+            </button>
+
+            <button class="category-tile-btn" data-cat="Structural Collapse">
+              <div class="cat-icon-frame slate-accent">🏚️</div>
+              <strong>Collapse</strong>
+              <span>Building damage, debris</span>
+            </button>
+
+            <button class="category-tile-btn" data-cat="Relief Supplies Deficit">
+              <div class="cat-icon-frame cyan-accent">💧</div>
+              <strong>Relief Rations</strong>
+              <span>Drinking water, food</span>
+            </button>
+
+            <button class="category-tile-btn" data-cat="Evacuation Transport">
+              <div class="cat-icon-frame purple-accent">🚐</div>
+              <strong>Evacuation</strong>
+              <span>Elderly, disabled transport</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Family Safety Quick Bar -->
+        <div class="light-card family-banner-card">
+          <div class="family-left-col">
+            <div class="family-icon-box">👨‍👩‍👧‍👦</div>
+            <div>
+              <strong>Family Safety Circle (3 Members)</strong>
+              <span id="fam-status-sub">Sarah (Safe) · David (Pinged) · Maya (Safe)</span>
+            </div>
+          </div>
+          <button class="btn-green-safe" id="btn-safe-confirm">
+            ✓ I AM SAFE
+          </button>
+        </div>
+
+        <!-- Emergency Medical ID & ICE Card -->
+        <div class="light-card">
+          <div class="card-title-row">
+            <h3>Medical ID & Emergency Contact</h3>
+            <span class="badge-blue-soft">Offline ICE Tag</span>
+          </div>
+
+          <div class="medical-id-grid">
+            <div class="med-item">
+              <span class="med-label">Blood Type</span>
+              <strong class="med-val">O-Positive (O+)</strong>
+            </div>
+            <div class="med-item">
+              <span class="med-label">Allergies / Conditions</span>
+              <strong class="med-val">Penicillin · Mild Asthma</strong>
+            </div>
+            <div class="med-item">
+              <span class="med-label">Primary ICE Contact</span>
+              <strong class="med-val">David (Father) — <a href="tel:555-0192" class="ice-link">555-0192</a></strong>
+            </div>
+            <div class="med-item">
+              <span class="med-label">Home Sector</span>
+              <strong class="med-val">Sector 4, River Road #42</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Point Survival Kit Checklist -->
+        <div class="light-card">
+          <div class="card-title-row">
+            <h3>Disaster Preparedness Kit</h3>
+            <span id="chk-progress-label" class="badge-blue-soft">3 of 5 Ready</span>
+          </div>
+
+          <div class="checklist-stack">
+            <label class="check-row">
+              <input type="checkbox" checked class="kit-chk" />
+              <span>3-Day Drinking Water (1 gallon / 3.8L per person per day)</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" checked class="kit-chk" />
+              <span>Non-perishable rations, energy bars & manual can opener</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" checked class="kit-chk" />
+              <span>First-aid kit & essential 7-day prescription medicines</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="kit-chk" />
+              <span>LED Flashlight, hand-crank radio & backup batteries</span>
+            </label>
+            <label class="check-row">
+              <input type="checkbox" class="kit-chk" />
+              <span>Waterproof document pouch with IDs and insurance</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Offline First-Aid Pocket Protocols -->
+        <div class="light-card">
+          <div class="card-title-row">
+            <h3>Offline First-Aid Quick Guides</h3>
+            <span class="card-title-sub">Tap to view step-by-step triage</span>
+          </div>
+
+          <div class="first-aid-accordion">
+            <details class="aid-item">
+              <summary class="aid-summary">
+                <span>🫀 CPR for Unresponsive Adults</span>
+                <span class="aid-chevron">&darr;</span>
+              </summary>
+              <div class="aid-body">
+                1. Call 911 or activate ResQ SOS.<br/>
+                2. Place hands center of chest, push hard and fast (100–120 beats/min to the beat of "Stayin' Alive").<br/>
+                3. Perform 30 chest compressions followed by 2 rescue breaths if trained.
+              </div>
+            </details>
+
+            <details class="aid-item">
+              <summary class="aid-summary">
+                <span>🩸 Severe Bleeding & Tourniquet</span>
+                <span class="aid-chevron">&darr;</span>
+              </summary>
+              <div class="aid-body">
+                1. Apply direct firm pressure with clean cloth or dressing.<br/>
+                2. If limb hemorrhage does not stop, apply tourniquet 5–7cm above wound (never over a joint).<br/>
+                3. Tighten until bleeding stops. Record the exact application time on the patient's forehead.
+              </div>
+            </details>
+
+            <details class="aid-item">
+              <summary class="aid-summary">
+                <span>💧 Emergency Water Purification</span>
+                <span class="aid-chevron">&darr;</span>
+              </summary>
+              <div class="aid-body">
+                • <strong>Boiling:</strong> Bring cloudy water to a vigorous rolling boil for at least 1 full minute.<br/>
+                • <strong>Disinfection:</strong> Add 2 drops of standard unscented household bleach per liter of clear water. Stir and wait 30 minutes before drinking.
+              </div>
+            </details>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- =============================================================== -->
+      <!-- COLUMN 2: REAL-TIME TACTICAL MAP & SHELTERS -->
+      <!-- =============================================================== -->
+      <section class="grid-col-right">
+        
+        <!-- Real Interactive Tactical Disaster Map Card -->
+        <div class="light-card map-card-container">
+          <div class="card-title-row">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="radar-dot-pulse"></span>
+              <h3>Live Tactical Disaster Map</h3>
+              <span class="badge-blue-soft" id="map-tile-badge">GIS Light</span>
+            </div>
+            
+            <!-- Map Base Tile Switcher & Layer Filters -->
+            <div class="map-controls-row">
+              <div class="map-tile-switcher">
+                <button class="tile-switch-btn active" data-style="positron" title="Minimal Light Blue Theme (Default)">🗺️ Light</button>
+                <button class="tile-switch-btn" data-style="satellite" title="High-Res Satellite Imagery">🛰️ Satellite</button>
+                <button class="tile-switch-btn" data-style="streets" title="OpenStreetMap Streets">🧭 Streets</button>
+              </div>
+
+              <div class="map-layer-controls">
+                <button class="layer-pill-btn active" data-layer="shelters">Shelters (3)</button>
+                <button class="layer-pill-btn active" data-layer="hazards">Surge Zone</button>
+                <button class="layer-pill-btn active" data-layer="nodes">Mesh Nodes</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real Geographic Map Container (Leaflet + CartoDB Positron Light Blue Theme) -->
+          <div class="map-canvas-frame" id="map-frame-box">
+            <div id="resq-real-map" class="resq-real-map-view"></div>
+            
+            <div class="map-hud-bar">
+              <button class="hud-pill-btn" id="btn-recenter-map" title="Center map on your GPS">📍 My Location</button>
+              <span class="hud-crs-txt" id="map-live-coords">GPS: 37.7749° N, 122.4194° W · Real-time GIS</span>
+            </div>
+
+            <!-- Slide-in Interactive Marker Drawer -->
+            <div class="marker-info-drawer" id="resq-drawer">
+              <div class="drawer-top-row">
+                <strong id="drawer-title-text">Marker Details</strong>
+                <button class="drawer-close-btn" id="btn-close-drawer">&times;</button>
+              </div>
+              <div class="drawer-body-txt" id="drawer-desc-text">
+                Click any marker on the map to inspect live status.
+              </div>
+              <div class="drawer-btn-row" id="drawer-buttons-row"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evacuation Shelters Directory with Live Occupancy -->
+        <div class="light-card">
+          <div class="card-title-row">
+            <h3>Nearby Evacuation Shelters</h3>
+            <span class="card-title-sub">Real-time load balancing</span>
+          </div>
+
+          <!-- Filter chips -->
+          <div class="shelter-filter-chips">
+            <button class="chip-filter active" data-filter="all">All Shelters</button>
+            <button class="chip-filter" data-filter="water">💧 Clean Water</button>
+            <button class="chip-filter" data-filter="medical">🏥 Medical Clinic</button>
+            <button class="chip-filter" data-filter="space">🟢 Ample Capacity</button>
+          </div>
+
+          <div class="shelters-feed" id="shelters-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Official Civil Defense Alerts Feed -->
+        <div class="light-card">
+          <div class="card-title-row">
+            <h3>Official Civil Defense Alerts</h3>
+            <span class="live-broadcast-pill">● Broadcast Live</span>
+          </div>
+
+          <div class="alerts-feed-stack">
+            <div class="alert-item tier-official">
+              <div class="alert-item-header">
+                <span class="tier-pill-official">OFFICIAL ALERT</span>
+                <span class="alert-time">10:42 AM · Civil Defense</span>
+              </div>
+              <h4>Evacuation Order for Sector 4 Low-Lying Basin</h4>
+              <p>River levels have breached 4.5m critical threshold. Residents must move to West High School or North Pavilion via elevated 5th Ave.</p>
+            </div>
+
+            <div class="alert-item tier-verified">
+              <div class="alert-item-header">
+                <span class="tier-pill-verified">VERIFIED INCIDENT</span>
+                <span class="alert-time">11:15 AM · Police Dispatch</span>
+              </div>
+              <h4>Sector 4 Bridge Impassable</h4>
+              <p>Structural debris damage confirmed; live sparking power lines. Detour via East Skyway.</p>
+            </div>
+          </div>
+
+          <!-- Helplines Grid -->
+          <div class="helplines-grid">
+            <a href="tel:911" class="helpline-card">
+              <span class="hl-icon">🚨</span>
+              <div>
+                <strong>Central Disaster</strong>
+                <span>911 / 112</span>
+              </div>
+            </a>
+            <a href="tel:108" class="helpline-card">
+              <span class="hl-icon">🚑</span>
+              <div>
+                <strong>ALS Ambulance</strong>
+                <span>108</span>
+              </div>
+            </a>
+            <a href="tel:1077" class="helpline-card">
+              <span class="hl-icon">🌊</span>
+              <div>
+                <strong>Flood Rescue</strong>
+                <span>1077</span>
+              </div>
+            </a>
+            <a href="tel:1912" class="helpline-card">
+              <span class="hl-icon">⚡</span>
+              <div>
+                <strong>Live Wire Hazard</strong>
+                <span>1912</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- =============================================================== -->
+    <!-- EMERGENCY INCIDENT REPORT MODAL (Minimal Light Theme) -->
+    <!-- =============================================================== -->
+    <div class="modal-overlay-light" id="report-modal" style="display: none;">
+      <div class="modal-dialog-card">
+        <div class="modal-dialog-header">
+          <strong id="modal-cat-heading">🚨 Emergency Report</strong>
+          <button class="modal-close-button" id="btn-close-modal">&times;</button>
+        </div>
+
+        <div class="modal-dialog-body">
+          <form id="emergency-report-form">
+            <div class="form-group-light">
+              <label>Disaster Category</label>
+              <select id="modal-select-cat" class="form-input-light">
+                <option value="Medical Emergency">🏥 Medical Emergency (Injuries, CPR, Bleeding)</option>
+                <option value="Flood & Water Trap">🌊 Flood & Water Level Trap (Trapped on 2nd Floor)</option>
+                <option value="Fire & Smoke Hazard">🔥 Fire & Smoke Hazard (Active flames)</option>
+                <option value="Structural Collapse">🏚️ Structural Collapse (Building damage, debris)</option>
+                <option value="Relief Supplies Deficit">💧 Relief Supplies (Drinking Water / Food)</option>
+                <option value="Evacuation Transport">🚐 Evacuation Transport (Elderly / No vehicle)</option>
+              </select>
+            </div>
+
+            <div class="form-split-2">
+              <div class="form-group-light">
+                <label>People Trapped</label>
+                <input type="number" id="modal-people-val" class="form-input-light" value="2" min="1" max="50" />
+              </div>
+              <div class="form-group-light">
+                <label>Injuries?</label>
+                <select id="modal-injury-val" class="form-input-light">
+                  <option value="Severe / Bleeding">Severe / Bleeding</option>
+                  <option value="Minor / Stable">Minor / Stable</option>
+                  <option value="None">None</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group-light">
+              <label>Location / Landmark</label>
+              <input type="text" id="modal-loc-val" class="form-input-light" value="Sector 4, near River Road & 5th Ave (Balcony)" />
+            </div>
+
+            <div class="form-group-light">
+              <label>Distress Details</label>
+              <textarea id="modal-details-val" class="form-input-light" rows="2" placeholder="e.g. Water is rising fast, elderly mother with asthma on second floor..."></textarea>
+            </div>
+
+            <div class="modal-footer-actions">
+              <button type="button" class="btn-secondary-white" id="btn-cancel-modal">Cancel</button>
+              <button type="submit" class="btn-danger-red">
+                <span>Broadcast Distress Beacon</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULLSCREEN EMERGENCY RESCUE STROBE -->
+    <div id="strobe-screen" style="display: none;" class="strobe-screen-overlay">
+      <div class="strobe-msg-bold">EMERGENCY RESCUE STROBE</div>
+      <button class="btn-stop-strobe" id="btn-stop-strobe">TAP TO STOP STROBE</button>
+    </div>
+
+    <!-- TOAST NOTIFICATION STACK -->
+    <div class="toast-stack-container" id="toast-container"></div>
+
+  </div>
+
+  <script type="module" src="./src/resq.js"></script>
+</body>
+</html>

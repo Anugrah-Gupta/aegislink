@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aegis Tactical Command Center — Official Government Terminal</title>
+  <meta name="description" content="Dedicated Government Incident Command Center for NDRF, SDMA, and District Disaster Management Authorities." />
+
+  <meta name="theme-color" content="#080c14" />
+  <link rel="icon" type="image/svg+xml" href="./assets/aegislink-shield.svg" />
+
+  <!-- Google Fonts: Inter, Outfit, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet GIS Map Stylesheet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="./src/style.css" />
+  <link rel="stylesheet" href="./src/command.css" />
+</head>
+<body class="command-fullscreen-body">
+
+  <!-- TOP HIGH-TACTICAL NAVIGATION BAR -->
+  <header class="cmd-nav-bar">
+    <div class="cmd-nav-left">
+      <a href="index.html" class="btn-return-overview" title="Return to Public Overview">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Overview</span>
+      </a>
+
+      <div class="cmd-brand-tag">
+        <img src="./assets/aegislink-shield.svg" alt="AegisLink" width="26" height="26" />
+        <div>
+          <span class="cmd-title-txt">Aegis Command Center</span>
+          <span class="cmd-grid-sub">Sector 1–8 Tactical Operations Room</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Government Clearance Session Badge -->
+    <div class="cmd-nav-right">
+      <div class="mesh-health-pill">
+        <span class="radar-live-dot pulse"></span>
+        <span>Mesh LoRa: 48 Nodes Active</span>
+      </div>
+
+      <div class="officer-session-pill" id="officer-badge-display">
+        <span class="gov-badge-icon">🏛️</span>
+        <div class="officer-details">
+          <span class="officer-name-txt" id="display-officer-name">Commander Sharma</span>
+          <span class="officer-agency-txt" id="display-officer-agency">NDRF 8th Battalion · Level 4</span>
+        </div>
+      </div>
+
+      <button class="btn-lock-terminal" id="btn-lock-terminal" title="Lock Terminal and Revoke Clearance">
+        <span>🔒 Lock Terminal</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN FULL-SCREEN WORKSPACE -->
+  <main class="cmd-workspace-container">
+    
+    <!-- Top Operations Metrics KPI Bar -->
+    <div class="command-kpi-grid">
+      <div class="kpi-card" id="kpi-incidents">
+        <div class="kpi-top">
+          <span class="kpi-title">Active Incidents</span>
+          <span class="kpi-badge red">Live Triage</span>
+        </div>
+        <div class="kpi-value" id="kpi-active-count">184</div>
+        <div class="kpi-foot">
+          <span class="foot-highlight text-red" id="kpi-crit-count">23 Critical Triage</span> · 91 In Progress
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-title">Responders On-Duty</span>
+          <span class="kpi-badge blue">Fleet Active</span>
+        </div>
+        <div class="kpi-value">67</div>
+        <div class="kpi-foot">
+          <span class="foot-highlight text-blue">42 En Route</span> · 18 On-Scene · 7 Staged
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-title">Shelters Operational</span>
+          <span class="kpi-badge amber">Capacity</span>
+        </div>
+        <div class="kpi-value">31</div>
+        <div class="kpi-foot">
+          <span class="foot-highlight text-amber">4,820 / 6,100</span> (79% Occupancy)
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-top">
+          <span class="kpi-title">Aegis Mesh Nodes</span>
+          <span class="kpi-badge green">RF LoRa</span>
+        </div>
+        <div class="kpi-value">48 / 48</div>
+        <div class="kpi-foot">
+          <span class="foot-highlight text-green">94% Mesh Health</span> · 0 Packet Loss
+        </div>
+      </div>
+    </div>
+
+    <!-- Master Command Console Layout -->
+    <div class="command-console">
+      
+      <!-- Left Column: Interactive Tactical GIS Map -->
+      <div class="console-map-col">
+        <div class="console-box-header">
+          <div class="box-title">
+            <span class="radar-dot pulse"></span>
+            <strong>Tactical GIS Grid (EPSG:3857)</strong>
+            <span class="sync-live-pill" id="cmd-sync-status-badge">
+              <span class="sync-ping-dot"></span> ResQ Sync: Active
+            </span>
+            <span class="sector-tag">Regional Alert: High (Flood Surge Active)</span>
+          </div>
+
+          <!-- Base Tile Switcher & Map Layers -->
+          <div class="cmd-map-toolbar-row">
+            <div class="cmd-tile-switcher">
+              <button class="cmd-tile-btn active" data-style="dark" title="Tactical Dark Matter Grid">🌑 Dark GIS</button>
+              <button class="cmd-tile-btn" data-style="satellite" title="Esri Satellite Recon">🛰️ Satellite</button>
+              <button class="cmd-tile-btn" data-style="streets" title="Street Network Grid">🗺️ Streets</button>
+            </div>
+
+            <!-- Map Layer Filter Toggles -->
+            <div class="map-layer-toggles">
+              <button class="layer-btn active" data-layer="sos">
+                <span class="dot-swatch red-dot"></span> SOS (<span id="count-layer-sos">4</span>)
+              </button>
+              <button class="layer-btn active" data-layer="citizen">
+                <span class="dot-swatch" style="background: #38bdf8;"></span> Citizen GPS
+              </button>
+              <button class="layer-btn active" data-layer="hospitals">
+                <span class="dot-swatch blue-dot"></span> Hospitals (3)
+              </button>
+              <button class="layer-btn active" data-layer="shelters">
+                <span class="dot-swatch amber-dot"></span> Shelters (4)
+              </button>
+              <button class="layer-btn active" data-layer="nodes">
+                <span class="dot-swatch green-dot"></span> Mesh Nodes (5)
+              </button>
+              <button class="layer-btn active" data-layer="hazards">
+                <span class="dot-swatch purple-dot"></span> Surge Zone
+              </button>
+              <button class="layer-btn active" data-layer="responders">
+                <span class="dot-swatch cyan-dot"></span> Fleet (4)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real Leaflet GIS Tactical Map Viewport -->
+        <div class="map-viewport" id="tactical-map-viewport">
+          <div id="command-real-map" class="command-real-map-view" style="width: 100%; height: 100%; position: absolute; top:0; left:0; z-index: 1;"></div>
+          
+          <!-- Map Overlay HUD Controls -->
+          <div class="map-hud-controls" style="z-index: 10;">
+            <button class="hud-btn" id="btn-zoom-in" title="Zoom In">+</button>
+            <button class="hud-btn" id="btn-zoom-out" title="Zoom Out">&minus;</button>
+            <button class="hud-btn" id="btn-recenter-resq" title="Focus Citizen Balcony GPS (ResQ)">📍 ResQ</button>
+            <button class="hud-btn" id="btn-reset-view" title="Reset Tactical View">&#8635;</button>
+          </div>
+
+          <!-- Map Legend Bar -->
+          <div class="map-legend-bar" style="z-index: 10;">
+            <span id="map-telemetry-status">⚡ Tactical Link Live · Click any SOS or facility to issue Command Orders</span>
+            <span class="legend-scale" id="map-coords-display">GPS: 37.7749° N, 122.4194° W · Real Geographic GIS</span>
+          </div>
+        </div>
+
+        <!-- Selected Marker Detail & Government Dispatch Drawer -->
+        <div class="marker-detail-drawer" id="marker-drawer" style="z-index: 25;">
+          <div class="drawer-header">
+            <div class="drawer-title" id="drawer-title">Incident #SOS-182 (Sector 4)</div>
+            <button class="drawer-close" id="drawer-close-btn">&times;</button>
+          </div>
+          <div class="drawer-body" id="drawer-body">
+            <!-- Dynamically populated with Incident Telemetry & Directives -->
+          </div>
+          <div class="drawer-actions" id="drawer-actions">
+            <!-- Dynamically populated with Dispatch Controls -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: AI Situational Intelligence & Feeds -->
+      <div class="console-sidebar-col">
+        <div class="sidebar-tabs">
+          <button class="tab-btn active" data-tab="ai-triage">AI Intelligence</button>
+          <button class="tab-btn" data-tab="live-incidents">Live Incidents (<span id="tab-incident-count">8</span>)</button>
+          <button class="tab-btn" data-tab="resources">Hospital & Shelter</button>
+        </div>
+
+        <!-- TAB 1: AI Crisis Intelligence Engine -->
+        <div class="tab-pane active" id="pane-ai-triage">
+          <div class="ai-box">
+            <div class="ai-box-badge">
+              <span class="ai-sparkle">✨</span>
+              <span>Aegis AI Incident Classifier & Deduplication</span>
+            </div>
+            <p class="ai-box-desc">
+              Transforms incoming civilian distress texts and radio transcripts into structured, prioritized triage.
+            </p>
+
+            <div class="sample-prompts-label">Try sample incoming distress messages:</div>
+            <div class="sample-pills">
+              <button class="sample-pill" data-msg="My mother has asthma and is injured, we are trapped on second floor at River Road 42, water reaching 5 feet rapidly!">Trapped & Medical</button>
+              <button class="sample-pill" data-msg="Bridge near Sector 4 has cracked and power lines are sparking across the road. Traffic blocked both ways.">Sector 4 Bridge Blocked</button>
+              <button class="sample-pill" data-msg="Elderly shelter on Pine Street ran out of drinking water and dialysis generator fuel is at 10%. Need supply immediately.">Shelter Fuel & Water</button>
+            </div>
+
+            <div class="ai-input-wrapper">
+              <textarea id="ai-input-text" placeholder="Type or paste emergency situation report here..." rows="3">Severe flash flood in Sector 4: 3 trapped elderly citizens on 2nd floor balcony at River Road, rising flood water at +18cm/hr, urgent boat evacuation needed.</textarea>
+              <button class="btn-ai-analyze" id="btn-run-ai">
+                <span>Classify & Deduplicate</span>
+                <span class="btn-spark">⚡</span>
+              </button>
+            </div>
+
+            <!-- AI Classification Results -->
+            <div class="ai-result-card" id="ai-result-display">
+              <div class="ai-result-head">
+                <span class="badge-tag-ai">AI Analysis Complete</span>
+                <span class="ai-confidence">Confidence: 98.4%</span>
+              </div>
+              <div class="ai-tags-row" id="ai-tags-row">
+                <span class="ai-tag tag-urgent">CRITICAL (P1)</span>
+                <span class="ai-tag tag-cat">Water Trap & Medical</span>
+                <span class="ai-tag tag-people">3 Trapped</span>
+                <span class="ai-tag tag-loc">Sector 4 (River Rd)</span>
+              </div>
+              <div class="ai-summary" id="ai-summary-text">
+                <strong>Recommended Action:</strong> Immediate dispatch of Boat Rescue Unit 1 & Paramedic ALS team. Water ingress rate critical.
+              </div>
+              <div class="ai-dedupe-note" id="ai-dedupe-note">
+                <span class="dedupe-icon">🔍</span>
+                <span><strong>AI Duplicate Detector:</strong> Grouped <strong>14 incoming distress reports</strong> in a 300m radius into this single incident record.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: Live Incident Feed List -->
+        <div class="tab-pane" id="pane-live-incidents">
+          <div class="incident-feed-controls">
+            <input type="text" class="feed-search-input" id="search-incidents" placeholder="Filter incidents by Sector or ID..." />
+          </div>
+          <div class="incident-items-list" id="incident-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- TAB 3: Hospital & Shelter Capacity -->
+        <div class="tab-pane" id="pane-resources">
+          <div class="resource-block">
+            <div class="res-head">
+              <strong>🏥 Emergency Trauma & Hospitals</strong>
+              <span class="res-badge">Live Bed Count</span>
+            </div>
+            <div class="res-list" id="hospital-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div class="resource-block" style="margin-top: 16px;">
+            <div class="res-head">
+              <strong>🏠 Evacuation Shelters</strong>
+              <span class="res-badge">Capacity & Supplies</span>
+            </div>
+            <div class="res-list" id="shelter-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script type="module" src="./src/command.js"></script>
+</body>
+</html>

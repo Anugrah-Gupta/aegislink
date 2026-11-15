@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AegisLink Command Center — Official Government & Incident Commander Portal</title>
+  <meta name="description" content="Restricted government access gateway for AegisLink Incident Command Center, NDRF, SDMA, and State Emergency Operations." />
+
+  <meta name="theme-color" content="#080c14" />
+  <link rel="icon" type="image/svg+xml" href="./assets/aegislink-shield.svg" />
+
+  <!-- Google Fonts: Inter, Outfit, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./src/command-login.css" />
+</head>
+<body class="command-login-body">
+
+  <!-- Tactical Cybernetic Radar Background Grid -->
+  <div class="cyber-radar-bg">
+    <div class="radar-sweep"></div>
+    <div class="cyber-grid"></div>
+    <div class="ambient-glow cyan-glow"></div>
+    <div class="ambient-glow blue-glow"></div>
+  </div>
+
+  <!-- Top Global Air-Gap Status Bar -->
+  <header class="cmd-top-bar">
+    <div class="top-left-brand">
+      <a href="index.html" class="nav-return-btn" title="Return to AegisLink Public Overview">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Public Portal</span>
+      </a>
+      <div class="airgap-badge">
+        <span class="lock-dot"></span>
+        <span>RESTRICTED ACCESS · LEVEL 4 CLASSIFIED</span>
+      </div>
+    </div>
+
+    <div class="top-right-meta">
+      <div class="crypto-status">
+        <span class="mono-code">AES-256 GCM</span>
+        <span class="status-dot green"></span>
+      </div>
+      <div class="agency-tag">NDRF / SDMA / FEMA ICS-209</div>
+    </div>
+  </header>
+
+  <!-- Main Viewport -->
+  <main class="cmd-login-viewport">
+    <div class="cmd-login-card">
+
+      <!-- Official Government Security Header -->
+      <div class="cmd-card-header">
+        <div class="shield-emblem-wrap">
+          <img src="./assets/aegislink-shield.svg" alt="AegisLink Seal" class="shield-img" />
+          <div class="emblem-hex-ring"></div>
+        </div>
+
+        <div class="gov-seal-title">
+          <span class="dept-badge">NATIONAL DISASTER RESPONSE INFRASTRUCTURE</span>
+          <h1 class="portal-heading">Aegis Command Center</h1>
+          <p class="portal-subheading">Authorized Government & Incident Commander Terminal</p>
+        </div>
+
+        <!-- Security Warning Notice -->
+        <div class="classified-notice-strip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          <span>RESTRICTED GOVERNMENT CONSOLE. UNAUTHORIZED ACCESS IS PROHIBITED.</span>
+        </div>
+      </div>
+
+      <!-- Agency Department Selector -->
+      <div class="dept-selector-wrap">
+        <label class="selector-label">Command Agency Classification:</label>
+        <div class="dept-pills-row" id="agency-pills">
+          <button type="button" class="agency-pill active" data-agency="NDRF" data-domain="ndrf.gov.in">
+            <span class="pill-ico">🏛️</span>
+            <span>NDRF Command</span>
+          </button>
+          <button type="button" class="agency-pill" data-agency="SDMA" data-domain="sdma.gov.in">
+            <span class="pill-ico">🛡️</span>
+            <span>State SDMA / SEOC</span>
+          </button>
+          <button type="button" class="agency-pill" data-agency="DISTRICT" data-domain="collector.gov.in">
+            <span class="pill-ico">🏢</span>
+            <span>District Collector</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Government Login Form -->
+      <form class="cmd-form" id="gov-login-form" novalidate>
+        
+        <!-- Agency Officer ID or Official Gov Email -->
+        <div class="cmd-input-group">
+          <label for="gov-officer-id" class="cmd-label">Government Officer ID / Official Email</label>
+          <div class="cmd-input-box">
+            <span class="cmd-icon">🪪</span>
+            <input 
+              type="text" 
+              id="gov-officer-id" 
+              class="cmd-field" 
+              placeholder="e.g. NDRF-CMD-881 or commander@ndrf.gov.in"
+              value="NDRF-CMD-881"
+              required 
+              autocomplete="username"
+            />
+            <span class="domain-tag" id="domain-hint">.gov.in</span>
+          </div>
+          <span class="field-hint">Must be registered under National/State Disaster Management Authority</span>
+        </div>
+
+        <!-- Tactical Clearance Key / Passcode -->
+        <div class="cmd-input-group">
+          <div class="cmd-label-split">
+            <label for="gov-clearance-key" class="cmd-label">Command Clearance Token / Passcode</label>
+            <span class="auth-level-tag">Level 4 Required</span>
+          </div>
+          <div class="cmd-input-box">
+            <span class="cmd-icon">🔑</span>
+            <input 
+              type="password" 
+              id="gov-clearance-key" 
+              class="cmd-field" 
+              placeholder="Enter tactical clearance passcode"
+              value="COMMAND-2026"
+              required 
+              autocomplete="current-password"
+            />
+            <button type="button" class="btn-reveal" id="btn-reveal-key" title="Toggle visibility">👁️</button>
+          </div>
+          <span class="field-hint">2FA Emergency Mesh Hardware Token or ICS-209 Protocol Key</span>
+        </div>
+
+        <!-- Security Checkbox -->
+        <div class="cmd-policy-row">
+          <label class="cmd-checkbox-label">
+            <input type="checkbox" id="chk-gov-consent" checked />
+            <span class="cmd-custom-check"></span>
+            <span class="consent-txt">I certify that I am an authorized government official under NDMA Act Section 54.</span>
+          </label>
+        </div>
+
+        <!-- Authenticate Action Button -->
+        <button type="submit" class="btn-cmd-submit" id="btn-gov-submit">
+          <span class="btn-lock-ico">🔒</span>
+          <span class="btn-text">Authenticate & Unlock Command Grid</span>
+          <div class="cmd-spinner" id="cmd-spinner"></div>
+        </button>
+
+      </form>
+
+      <!-- Feedback / Alert Notification Strip -->
+      <div class="cmd-alert-strip" id="cmd-feedback-strip" style="display: none;"></div>
+
+      <!-- Quick Authorized Government Demos vs Unauthorized Test -->
+      <div class="cmd-demo-tray">
+        <div class="tray-label">
+          <span>Official Evaluation Credentials (Test & Presentation):</span>
+        </div>
+        <div class="tray-buttons-grid">
+          <!-- Authorized NDRF -->
+          <button type="button" class="btn-demo-auth" id="btn-preset-ndrf">
+            <span class="badge-tag green">Authorized</span>
+            <strong>NDRF Commander Sharma</strong>
+            <small>ID: NDRF-CMD-881 · Sector 4</small>
+          </button>
+
+          <!-- Authorized SDMA -->
+          <button type="button" class="btn-demo-auth" id="btn-preset-sdma">
+            <span class="badge-tag green">Authorized</span>
+            <strong>SDMA Incident Director</strong>
+            <small>ID: SDMA-DIR-104 · EOC Central</small>
+          </button>
+
+          <!-- Unauthorized Civilian Test (Shows Error) -->
+          <button type="button" class="btn-demo-unauth" id="btn-preset-unauth">
+            <span class="badge-tag red">Simulate Non-Gov</span>
+            <strong>Unauthorized Citizen User</strong>
+            <small>john.doe@gmail.com (Denied)</small>
+          </button>
+        </div>
+      </div>
+
+      <!-- Footer Citizen Guidance -->
+      <div class="cmd-footer-note">
+        <p>Are you a civilian seeking rescue or shelter assistance?</p>
+        <a href="login.html" class="resq-portal-link">Access ResQ Citizen Emergency Portal &rarr;</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: High-Security Government Access Denied Error -->
+  <div class="sec-modal-backdrop" id="unauth-error-modal" style="display: none;">
+    <div class="sec-modal-box">
+      <div class="modal-alarm-header">
+        <span class="siren-icon">🚨</span>
+        <div class="alarm-title-group">
+          <span class="alarm-badge">SECURITY VIOLATION · CODE 403-FORBIDDEN</span>
+          <h3>Access Denied: Government Credentials Required</h3>
+        </div>
+        <button type="button" class="btn-close-alarm" id="btn-close-unauth">&times;</button>
+      </div>
+
+      <div class="modal-body-content">
+        <div class="alert-desc-box">
+          <p>
+            The credentials provided (<strong><span id="denied-identity">user@gmail.com</span></strong>) do not belong to an accredited Government Incident Commander or Disaster Authority.
+          </p>
+          <p class="statute-warning">
+            ⚠️ <strong>Legal Notice:</strong> The Aegis Tactical GIS Command Center controls live responder fleet dispatches, hospital ICU telemetry, and encrypted regional disaster operations. Unaccredited civilian access is strictly prohibited under the <em>National Disaster Management Act</em> and <em>Critical Infrastructure Cyber Regulations</em>.
+          </p>
+        </div>
+
+        <div class="corrective-actions">
+          <h4>Authorized Options:</h4>
+          <ul>
+            <li>If you are a citizen requesting emergency aid, shelter, or sending an SOS, use the <strong>ResQ Citizen Application</strong>.</li>
+            <li>If you are government personnel, ensure you use your verified <strong>.gov.in / agency badge ID</strong> and valid clearance passcode.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal-actions-footer">
+        <a href="login.html" class="btn-redirect-resq">
+          <span>📱 Switch to ResQ Citizen App</span>
+        </a>
+        <button type="button" class="btn-retry-gov" id="btn-retry-modal">
+          <span>Try Government Login Again</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/command-login.js"></script>
+</body>
+</html>

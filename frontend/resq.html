@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResQ — Citizen Disaster & Emergency Network (iOS Clean Light Theme)</title>
+  <meta name="description" content="Offline-first citizen disaster response application with real-time Leaflet map, USGS live hazards, and FastAPI backend." />
+  
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- Apple SF Pro / Inter Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Real-Time Live Disaster Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <link rel="stylesheet" href="./css/ios-theme.css" />
+</head>
+<body>
+  <div class="app-viewport">
+    
+    <!-- TOP FROSTED GLASS NAVIGATION BAR (Apple iOS Style) -->
+    <header class="ios-nav-header">
+      <div class="ios-nav-brand">
+        <div class="brand-icon-shield">🛡️</div>
+        <div class="brand-meta">
+          <span class="brand-title">ResQ</span>
+          <span class="brand-badge">AegisLink Disaster Ecosystem</span>
+        </div>
+      </div>
+
+      <div class="ios-nav-tools">
+        <!-- Live USGS Real-Time Hazard Indicator -->
+        <div class="ios-pill-btn hide-mobile" id="btn-live-hazards" title="Real-Time Disaster Feed Status">
+          <span class="pulse-dot" style="background-color: #ff3b30;"></span>
+          <span id="quake-count-text">USGS: Live Feed Active</span>
+        </div>
+
+        <!-- Siren & Strobe Tools -->
+        <button class="ios-pill-btn" id="btn-siren-tool" title="Sound Loud Siren">
+          <span>🚨 Siren</span>
+        </button>
+        <button class="ios-pill-btn" id="btn-strobe-tool" title="Screen Emergency Strobe">
+          <span>🔦 Strobe</span>
+        </button>
+
+        <!-- Network Online / Mesh Offline Switcher -->
+        <button class="net-status-badge online" id="btn-net-toggle" title="Click to test offline emergency mesh">
+          <span class="pulse-dot"></span>
+          <span id="net-badge-label">Online</span>
+        </button>
+
+        <a href="index.html" class="ios-pill-btn primary hide-mobile">Command View &rarr;</a>
+      </div>
+    </header>
+
+    <!-- OFFLINE MESH BANNER (Light Theme) -->
+    <div class="ios-offline-banner" id="mesh-offline-banner" style="display: none;">
+      <div class="banner-left">
+        <span style="font-size: 1.25rem;">⚠️</span>
+        <div>
+          <strong>INTERNET & CELLULAR UNAVAILABLE</strong>
+          <span>AegisLink Autonomous Mesh Active · Transmitting via Node #014 (LoRa 868MHz / BLE 5.3)</span>
+        </div>
+      </div>
+      <button class="ios-pill-btn" id="btn-restore-net">Reconnect</button>
+    </div>
+
+    <!-- MAIN FULL-WINDOW WORKSPACE GRID (NO BLACK BARS - 100% FIT SCREEN) -->
+    <div class="ios-workspace-grid">
+
+      <!-- =============================================================== -->
+      <!-- LEFT PANE: SOS & CITIZEN EMERGENCY HUB -->
+      <!-- =============================================================== -->
+      <aside class="ios-pane-left">
+        
+        <!-- Offline Sync Bar (When packets stored locally) -->
+        <div class="ios-card" id="offline-queue-card" style="display: none; background-color: #fff7ed; border-color: #fed7aa;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="color: #9a3412; font-size: 0.85rem;" id="queue-count-text">1 Report Queued in Phone</strong>
+              <p style="font-size: 0.72rem; color: #c2410c;">Saved locally in device storage for mesh forwarding</p>
+            </div>
+            <button class="ios-pill-btn" id="btn-sync-offline-now" style="background-color: #ff9500; color: #ffffff; border: none;">Sync Now</button>
+          </div>
+        </div>
+
+        <!-- Master SOS Hero Card -->
+        <div class="ios-sos-card">
+          <div class="sos-card-header">
+            <span class="gps-badge">
+              <span>📍</span> <span id="gps-display">37.7749° N, 122.4194° W</span>
+            </span>
+            <span style="font-weight: 600; color: #34c759;">🔋 98% Battery</span>
+          </div>
+
+          <div class="sos-button-wrapper">
+            <div class="sos-pulse-wave"></div>
+            <button class="master-sos-btn" id="btn-master-sos">
+              <span class="sos-btn-title">EMERGENCY SOS</span>
+              <span class="sos-btn-sub">Tap to Request Immediate Rescue</span>
+            </button>
+          </div>
+
+          <!-- Countdown Abort Overlay -->
+          <div class="countdown-modal" id="sos-countdown-modal" style="display: none;">
+            <div class="countdown-badge-circle" id="countdown-digit">3</div>
+            <div class="countdown-warn-text">BROADCASTING DISTRESS IN 3 SECONDS</div>
+            <button class="ios-pill-btn" id="btn-abort-countdown" style="font-weight: 700;">CANCEL / FALSE ALARM</button>
+          </div>
+
+          <div class="sos-card-footer">
+            Includes exact GPS coordinates, medical requirement, and battery telemetry.
+          </div>
+        </div>
+
+        <!-- Fast Disaster Category Selector -->
+        <div>
+          <div class="ios-section-header">
+            <h3>Emergency Categories</h3>
+            <span>Select for fast triage</span>
+          </div>
+
+          <div class="category-tile-grid">
+            <button class="cat-button" data-cat="Medical Emergency">
+              <div class="cat-icon-bubble" style="background-color: rgba(255, 59, 48, 0.15); color: #ff3b30;">🏥</div>
+              <strong>Medical</strong>
+              <span>Injuries, trauma, cardiac</span>
+            </button>
+
+            <button class="cat-button" data-cat="Flood & Water Trap">
+              <div class="cat-icon-bubble" style="background-color: rgba(0, 122, 255, 0.15); color: #007aff;">🌊</div>
+              <strong>Flood Trap</strong>
+              <span>Water rising, on roof</span>
+            </button>
+
+            <button class="cat-button" data-cat="Fire & Smoke Hazard">
+              <div class="cat-icon-bubble" style="background-color: rgba(255, 149, 0, 0.15); color: #ff9500;">🔥</div>
+              <strong>Fire / Smoke</strong>
+              <span>Active blaze, trapped</span>
+            </button>
+
+            <button class="cat-button" data-cat="Structural Collapse">
+              <div class="cat-icon-bubble" style="background-color: rgba(142, 142, 147, 0.15); color: #636366;">🏚️</div>
+              <strong>Collapse</strong>
+              <span>Building damage, debris</span>
+            </button>
+
+            <button class="cat-button" data-cat="Relief Supplies Deficit">
+              <div class="cat-icon-bubble" style="background-color: rgba(48, 176, 199, 0.15); color: #30b0c7;">💧</div>
+              <strong>Relief Rations</strong>
+              <span>Clean water, food deficit</span>
+            </button>
+
+            <button class="cat-button" data-cat="Evacuation Transport">
+              <div class="cat-icon-bubble" style="background-color: rgba(175, 82, 222, 0.15); color: #af52de;">🚐</div>
+              <strong>Evacuation</strong>
+              <span>Elderly, disabled transport</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Family Safety Quick Bar -->
+        <div class="ios-card" style="background-color: rgba(52, 199, 89, 0.08); border-color: rgba(52, 199, 89, 0.25);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="color: #15803d; font-size: 0.85rem;">Family Safety Circle</strong>
+              <p style="font-size: 0.72rem; color: #166534;" id="fam-status-text">2 Verified Safe · 1 Unknown</p>
+            </div>
+            <button class="ios-pill-btn" id="btn-iam-safe" style="background-color: #34c759; color: #ffffff; border: none; font-weight: 700;">
+              ✓ I AM SAFE
+            </button>
+          </div>
+        </div>
+
+        <!-- 7-Point Offline Survival Checklist -->
+        <div class="ios-card">
+          <div class="ios-section-header">
+            <h3>Disaster Preparedness Kit</h3>
+            <span id="chk-progress">3 / 5 Ready</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.8125rem;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" checked class="kit-chk" style="accent-color: #007aff;" />
+              <span>3-Day Drinking Water (1 gal/person)</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" checked class="kit-chk" style="accent-color: #007aff;" />
+              <span>Non-perishable rations & can opener</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" checked class="kit-chk" style="accent-color: #007aff;" />
+              <span>First-aid kit & essential medicines</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" class="kit-chk" style="accent-color: #007aff;" />
+              <span>Flashlight & backup batteries</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" class="kit-chk" style="accent-color: #007aff;" />
+              <span>Waterproof document pouch with IDs</span>
+            </label>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- =============================================================== -->
+      <!-- CENTER PANE: REAL-TIME INTERACTIVE LEAFLET DISASTER MAP -->
+      <!-- =============================================================== -->
+      <main class="ios-pane-center">
+        
+        <!-- Floating Map HUD Controls -->
+        <div class="map-top-hud">
+          <div class="map-pill-controls">
+            <button class="map-layer-pill active" data-layer="quakes">🌋 Earthquakes</button>
+            <button class="map-layer-pill active" data-layer="sos">🆘 SOS Beacons</button>
+            <button class="map-layer-pill active" data-layer="shelters">🏠 Shelters</button>
+            <button class="map-layer-pill active" data-layer="floods">🌊 River Surge</button>
+            <button class="map-layer-pill active" data-layer="nodes">📡 Mesh Nodes</button>
+          </div>
+
+          <div style="pointer-events: auto;">
+            <button class="ios-pill-btn" id="btn-recenter-map" title="Center on your GPS location">
+              <span>📍 My Location</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div class="map-viewport-container">
+          <div id="disaster-leaflet-map"></div>
+        </div>
+
+        <!-- Floating Marker Info Drawer -->
+        <div class="map-floating-drawer" id="map-drawer">
+          <div class="drawer-head">
+            <strong id="drawer-headline">Incident Details</strong>
+            <button class="drawer-close-btn" id="btn-close-drawer">&times;</button>
+          </div>
+          <div class="drawer-content" id="drawer-description">
+            Loading real-time disaster information...
+          </div>
+          <div id="drawer-action-buttons" style="display: flex; gap: 8px;"></div>
+        </div>
+
+      </main>
+
+      <!-- =============================================================== -->
+      <!-- RIGHT PANE: LIVE INCIDENTS, AI TRIAGE & SHELTERS -->
+      <!-- =============================================================== -->
+      <aside class="ios-pane-right">
+        
+        <!-- Segment Control (Incidents, Shelters, AI Triage) -->
+        <div class="ios-segment-control">
+          <button class="segment-btn active" data-pane="tab-incidents">Live Incidents (<span id="count-incidents">4</span>)</button>
+          <button class="segment-btn" data-pane="tab-shelters">Shelters</button>
+          <button class="segment-btn" data-pane="tab-ai">AI Triage</button>
+        </div>
+
+        <!-- TAB 1: Real-Time Incidents Feed -->
+        <div class="right-tab-pane active" id="tab-incidents">
+          <div class="incident-scroll-list" id="incident-feed-list">
+            <!-- Dynamically populated via Python API -->
+          </div>
+        </div>
+
+        <!-- TAB 2: Shelters Capacity Directory -->
+        <div class="right-tab-pane" id="tab-shelters" style="display: none;">
+          <div id="shelter-feed-list">
+            <!-- Dynamically populated via Python API -->
+          </div>
+        </div>
+
+        <!-- TAB 3: Python AI NLP Triage Console -->
+        <div class="right-tab-pane" id="tab-ai" style="display: none;">
+          <div class="ai-triage-box">
+            <div class="ai-header-tag">
+              <span>✨</span>
+              <span>Python NLP Crisis Intelligence</span>
+            </div>
+            <p style="font-size: 0.75rem; color: #636366; margin-bottom: 8px;">
+              Paste or type citizen distress messages. The Python engine extracts category, urgency, victims, and detects duplicates.
+            </p>
+
+            <textarea id="ai-test-input" class="ai-input-field" rows="3" placeholder="e.g. My mother is trapped on the 2nd floor, river water rising rapidly!"></textarea>
+            
+            <button class="ios-pill-btn primary" id="btn-run-nlp" style="width: 100%; justify-content: center;">
+              Analyze with Python AI Engine
+            </button>
+
+            <div class="ai-result-panel" id="ai-nlp-output" style="display: none;">
+              <!-- Output populated by Python API -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Official Civil Defense Alerts Card -->
+        <div class="ios-card" style="margin-top: auto;">
+          <div class="ios-section-header">
+            <h3>Civil Defense Alerts</h3>
+            <span style="color: #ff3b30; font-weight: 700;">● Active</span>
+          </div>
+          <div id="alerts-preview-list" style="display: flex; flex-direction: column; gap: 8px; font-size: 0.78rem;">
+            <!-- Populated from Python backend -->
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- EMERGENCY REPORT MODAL (Apple Sheet) -->
+    <!-- =============================================================== -->
+    <div class="ios-modal-overlay" id="sos-report-dialog" style="display: none;">
+      <div class="ios-dialog-sheet">
+        <div class="dialog-title-bar">
+          <strong style="font-size: 1.1rem; color: #1c1c1e;" id="modal-title-text">🚨 Emergency Incident Report</strong>
+          <button class="drawer-close-btn" id="btn-close-modal">&times;</button>
+        </div>
+
+        <div class="dialog-body">
+          <form id="form-submit-sos">
+            <div class="form-group-ios">
+              <label>Emergency Category</label>
+              <select id="field-category" class="ios-select">
+                <option value="Medical Emergency">🏥 Medical Emergency (Injuries, CPR, Trauma)</option>
+                <option value="Flood & Water Trap">🌊 Flood & Water Level Trap (Trapped on Roof/2nd Floor)</option>
+                <option value="Fire & Smoke Hazard">🔥 Fire & Smoke Hazard (Active blaze, smoke)</option>
+                <option value="Structural Collapse">🏚️ Structural Collapse (Building damage, debris)</option>
+                <option value="Relief Supplies Deficit">💧 Relief Supplies (Drinking Water / Food)</option>
+                <option value="Evacuation Transport">🚐 Evacuation Transport (Elderly / No vehicle)</option>
+              </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div class="form-group-ios">
+                <label>People Trapped</label>
+                <input type="number" id="field-people" class="ios-input-text" value="2" min="1" max="50" />
+              </div>
+              <div class="form-group-ios">
+                <label>Injuries?</label>
+                <select id="field-injuries" class="ios-select">
+                  <option value="Severe / Bleeding">Severe / Bleeding</option>
+                  <option value="Minor / Stable">Minor / Stable</option>
+                  <option value="None">None</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group-ios">
+              <label>Location / Landmark</label>
+              <input type="text" id="field-location" class="ios-input-text" value="Sector 4, near River Road & 5th Ave (Balcony)" />
+            </div>
+
+            <div class="form-group-ios">
+              <label>Distress Details</label>
+              <textarea id="field-details" class="ios-input-text" rows="2" placeholder="e.g. Water is rising fast, elderly mother with asthma on second floor..."></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px;">
+              <button type="button" class="ios-pill-btn" id="btn-cancel-modal">Cancel</button>
+              <button type="submit" class="ios-pill-btn" style="background-color: #ff3b30; color: #ffffff; border: none; font-weight: 700;">
+                Broadcast Distress Beacon
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULLSCREEN EMERGENCY STROBE OVERLAY -->
+    <div id="strobe-screen" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 20px;">
+      <div style="font-size: 2rem; font-weight: 900;" id="strobe-text">EMERGENCY RESCUE STROBE</div>
+      <button class="ios-pill-btn" id="btn-stop-strobe" style="font-size: 1rem; padding: 12px 28px; font-weight: 800;">TAP TO STOP STROBE</button>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS WRAPPER -->
+    <div class="ios-toast-wrap" id="toast-wrapper"></div>
+
+  </div>
+
+  <!-- Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <script src="./js/resq-app.js"></script>
+</body>
+</html>

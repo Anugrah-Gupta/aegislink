@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AegisLink — Resilient Disaster Intelligence & Emergency Response Network</title>
+  <meta name="description" content="When infrastructure fails, AegisLink keeps people connected, informed, and protected. Complete disaster-management ecosystem powered by Python backend and real-time GIS." />
+  
+  <!-- Apple SF Pro / Inter Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet CSS for Real-Time Live Disaster Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <link rel="stylesheet" href="./css/ios-theme.css" />
+  <style>
+    /* Executive Landing Page Specific Light Theme Accents */
+    .hero-banner-light {
+      background: linear-gradient(180deg, #ffffff 0%, #f2f2f7 100%);
+      padding: 60px 32px 50px 32px;
+      border-bottom: 1px solid var(--ios-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero-light-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--ios-blue-light);
+      border: 1px solid rgba(0, 122, 255, 0.25);
+      color: var(--ios-blue);
+      padding: 6px 14px;
+      border-radius: var(--ios-radius-full);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero-light-title {
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+      color: #000000;
+      max-width: 980px;
+      margin-bottom: 18px;
+    }
+
+    .hero-light-desc {
+      font-size: 1.15rem;
+      color: #636366;
+      max-width: 760px;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .hero-light-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* KPI Row */
+    .kpi-row-light {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      padding: 24px 32px;
+      max-width: 1360px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .kpi-card-light {
+      background: #ffffff;
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--ios-shadow-subtle);
+    }
+
+    .kpi-title-light {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ios-label-secondary);
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .kpi-val-light {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #000000;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kpi-sub-light {
+      font-size: 0.78rem;
+      color: var(--ios-label-secondary);
+    }
+
+    /* Live Command Map Container */
+    .command-map-section {
+      padding: 0 32px 40px 32px;
+      max-width: 1360px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .command-map-card {
+      background: #ffffff;
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-xl);
+      overflow: hidden;
+      box-shadow: var(--ios-shadow-card);
+      height: 600px;
+      position: relative;
+    }
+
+    /* Values row */
+    .val-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 40px 32px;
+      max-width: 1360px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .val-item {
+      background: #ffffff;
+      border: 1px solid var(--ios-border);
+      border-radius: var(--ios-radius-lg);
+      padding: 24px;
+      box-shadow: var(--ios-shadow-subtle);
+    }
+
+    .val-item h4 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #000000;
+      margin-bottom: 8px;
+    }
+
+    .val-item p {
+      font-size: 0.875rem;
+      color: #636366;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-viewport">
+    
+    <!-- TOP FROSTED GLASS NAVIGATION BAR -->
+    <header class="ios-nav-header">
+      <div class="ios-nav-brand">
+        <div class="brand-icon-shield">🛡️</div>
+        <div class="brand-meta">
+          <span class="brand-title">AegisLink</span>
+          <span class="brand-badge">Command Center & Citizen Grid</span>
+        </div>
+      </div>
+
+      <div class="ios-nav-tools">
+        <div class="net-status-badge online">
+          <span class="pulse-dot"></span>
+          <span>Python Backend: Active</span>
+        </div>
+        <a href="resq.html" class="ios-pill-btn primary" style="font-weight: 700;">
+          <span>📱 Open ResQ Citizen App &rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- HERO SECTION (Light Theme, Pristine Typography) -->
+    <section class="hero-banner-light">
+      <div class="hero-light-badge">
+        <span>🛡️</span>
+        <span>AegisLink Disaster Lifecycle Platform</span>
+      </div>
+
+      <h1 class="hero-light-title">
+        When infrastructure fails, AegisLink keeps humanity connected, informed & protected.
+      </h1>
+
+      <p class="hero-light-desc">
+        A complete Python-powered disaster-management ecosystem. Featuring offline-first mesh communications, 
+        real-time USGS live hazards, dynamic shelter capacity balancing, and AI emergency triage.
+      </p>
+
+      <div class="hero-light-actions">
+        <a href="resq.html" class="ios-pill-btn primary" style="padding: 12px 28px; font-size: 1rem; font-weight: 800;">
+          Launch ResQ Citizen App (iOS Fit Screen)
+        </a>
+        <a href="#live-map-area" class="ios-pill-btn" style="padding: 12px 24px; font-size: 1rem;">
+          View Real-Time Tactical Map &darr;
+        </a>
+      </div>
+    </section>
+
+    <!-- LIVE METRICS BAR (FastAPI Live Counters) -->
+    <div class="kpi-row-light">
+      <div class="kpi-card-light">
+        <div class="kpi-title-light">
+          <span>Active Incidents</span>
+          <span style="color: #ff3b30;">● Live</span>
+        </div>
+        <div class="kpi-val-light" id="kpi-total-inc">4</div>
+        <div class="kpi-sub-light"><span style="color: #ff3b30; font-weight: 700;">2 Critical (P1)</span> · 2 In Progress</div>
+      </div>
+
+      <div class="kpi-card-light">
+        <div class="kpi-title-light">
+          <span>Live Earthquakes (USGS)</span>
+          <span style="color: #ff9500;">Feed</span>
+        </div>
+        <div class="kpi-val-light" id="kpi-quakes-count">20</div>
+        <div class="kpi-sub-light">Global real-time telemetry active</div>
+      </div>
+
+      <div class="kpi-card-light">
+        <div class="kpi-title-light">
+          <span>Shelters Operational</span>
+          <span style="color: #34c759;">Cap</span>
+        </div>
+        <div class="kpi-val-light">4 / 4</div>
+        <div class="kpi-sub-light">1,162 / 1,900 Occupancy (61%)</div>
+      </div>
+
+      <div class="kpi-card-light">
+        <div class="kpi-title-light">
+          <span>Aegis Mesh Relays</span>
+          <span style="color: #007aff;">LoRa</span>
+        </div>
+        <div class="kpi-val-light">48 Nodes</div>
+        <div class="kpi-sub-light">94% Mesh Signal Health</div>
+      </div>
+    </div>
+
+    <!-- REAL-TIME DISASTER MAP (Command Center View) -->
+    <section class="command-map-section" id="live-map-area">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+        <div>
+          <h2 style="font-size: 1.45rem; font-weight: 900; color: #000000; letter-spacing: -0.02em;">Live Tactical Disaster Map</h2>
+          <p style="font-size: 0.85rem; color: #636366;">Real-time USGS earthquakes, active SOS distress beacons, open shelters, and river surge flood polygons.</p>
+        </div>
+        <a href="resq.html" class="ios-pill-btn" style="text-decoration: none;">Open Full ResQ Screen &rarr;</a>
+      </div>
+
+      <div class="command-map-card">
+        <div id="disaster-leaflet-map" style="width: 100%; height: 100%;"></div>
+      </div>
+    </section>
+
+    <!-- CORE VALUE PILLARS (Clean Light 3-Column Layout) -->
+    <div class="val-grid">
+      <div class="val-item">
+        <div style="font-size: 1.8rem; margin-bottom: 12px;">📴</div>
+        <h4>Offline BLE & LoRa Mesh</h4>
+        <p>Distress beacons broadcast peer-to-peer even when cellular towers collapse. Stored locally in device flash and synchronized automatically once an uplink node is reached.</p>
+      </div>
+
+      <div class="val-item">
+        <div style="font-size: 1.8rem; margin-bottom: 12px;">🌋</div>
+        <h4>Real-Time Global USGS Feeds</h4>
+        <p>Integrated with real-time earthquake and sensor feeds to track seismic tremors, river surges, and active hazards directly on high-resolution light cartography.</p>
+      </div>
+
+      <div class="val-item">
+        <div style="font-size: 1.8rem; margin-bottom: 12px;">🤖</div>
+        <h4>Python AI Incident Triage</h4>
+        <p>NLP classifier that extracts urgency, trapped victims, and medical status from raw citizen panic texts while clustering duplicate reports into a single incident.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Leaflet JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <script>
+    // Initialize Command Overview Map
+    document.addEventListener("DOMContentLoaded", async () => {
+      const map = L.map("disaster-leaflet-map", {
+        center: [37.7749, -122.4194],
+        zoom: 13,
+        zoomControl: true
+      });
+
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+        attribution: '&copy; CARTO | AegisLink Emergency Grid',
+        maxZoom: 19
+      }).addTo(map);
+
+      // Fetch live disasters
+      try {
+        const res = await fetch("/api/disasters/live");
+        const data = await res.json();
+        const quakesEl = document.getElementById("kpi-quakes-count");
+        if (quakesEl) quakesEl.textContent = data.count;
+
+        data.disasters.forEach(d => {
+          const isQuake = d.type === "Earthquake";
+          const marker = L.circleMarker([d.lat, d.lng], {
+            radius: isQuake ? Math.max(d.mag * 3, 6) : 8,
+            fillColor: isQuake ? "#ff3b30" : "#ff9500",
+            color: "#ffffff",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8
+          }).addTo(map);
+          marker.bindPopup(`<strong>${d.title}</strong><br/>Source: ${d.source}<br/>Depth: ${d.depth_km}km`);
+        });
+      } catch (e) {}
+
+      // Fetch live incidents
+      try {
+        const res = await fetch("/api/incidents");
+        const data = await res.json();
+        const countEl = document.getElementById("kpi-total-inc");
+        if (countEl) countEl.textContent = data.count;
+
+        data.incidents.forEach(inc => {
+          const marker = L.circleMarker([inc.lat, inc.lng], {
+            radius: 9,
+            fillColor: "#ff3b30",
+            color: "#ffffff",
+            weight: 2,
+            fillOpacity: 0.9
+          }).addTo(map);
+          marker.bindPopup(`<strong>🆘 ${inc.id} (${inc.urgency})</strong><br/>${inc.type}<br/>Victims: ${inc.people}<br/>${inc.details}`);
+        });
+      } catch (e) {}
+
+      // Fetch shelters
+      try {
+        const res = await fetch("/api/shelters");
+        const data = await res.json();
+        data.shelters.forEach(s => {
+          const marker = L.circleMarker([s.lat, s.lng], {
+            radius: 8,
+            fillColor: "#34c759",
+            color: "#ffffff",
+            weight: 2,
+            fillOpacity: 0.9
+          }).addTo(map);
+          marker.bindPopup(`<strong>🏠 ${s.name}</strong><br/>Occupancy: ${s.occupancy}/${s.capacity}<br/>Water: ${s.water_level}`);
+        });
+      } catch (e) {}
+    });
+  </script>
+</body>
+</html>

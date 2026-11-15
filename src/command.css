@@ -1,0 +1,552 @@
+/* ==========================================================================
+   AEGIS TACTICAL COMMAND CENTER — FULL-SCREEN APPLICATION STYLES
+   ========================================================================== */
+
+body.command-fullscreen-body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--command-bg, #080c14);
+  color: #f3f4f6;
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.cmd-nav-bar {
+  width: 100%;
+  padding: 12px 24px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.cmd-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-return-overview {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+  color: #cbd5e1;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-return-overview:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: #38bdf8;
+}
+
+.cmd-brand-tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cmd-title-txt {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.cmd-grid-sub {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cmd-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mesh-health-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.radar-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.officer-session-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 9999px;
+}
+
+.gov-badge-icon {
+  font-size: 1rem;
+}
+
+.officer-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.officer-name-txt {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.officer-agency-txt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: #93c5fd;
+}
+
+.btn-lock-terminal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 0.78125rem;
+  font-weight: 700;
+  color: #f87171;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-lock-terminal:hover {
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
+}
+
+.cmd-workspace-container {
+  flex: 1;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ==========================================================================
+   REAL-TIME SYNC & TACTICAL LEAFLET GIS ENGINE
+   ========================================================================== */
+
+.sync-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #34d399;
+  letter-spacing: 0.02em;
+}
+
+.sync-ping-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: sync-pulse 1.8s infinite;
+}
+
+@keyframes sync-pulse {
+  0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.cmd-map-toolbar-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cmd-tile-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.7);
+  padding: 3px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cmd-tile-btn {
+  padding: 4px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.71875rem;
+  font-weight: 600;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cmd-tile-btn:hover {
+  color: #ffffff;
+}
+
+.cmd-tile-btn.active {
+  background: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+/* Leaflet Container & Dark Tactical Overrides */
+.command-real-map-view {
+  background: #080c14 !important;
+}
+
+.command-fullscreen-body .leaflet-container {
+  font-family: var(--font-sans) !important;
+  background-color: #080c14 !important;
+}
+
+.command-fullscreen-body .leaflet-bar a {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+.command-fullscreen-body .leaflet-bar a:hover {
+  background-color: #1e293b !important;
+  color: #38bdf8 !important;
+}
+
+/* Tactical Markers */
+.tactical-leaflet-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tactical-sos-beacon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tactical-sos-beacon .pulse-ring-sos {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #ef4444;
+  animation: sos-ring-wave 1.6s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes sos-ring-wave {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.tactical-sos-beacon .beacon-core-sos {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f87171 0%, #dc2626 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.tactical-sos-beacon .beacon-tag {
+  position: absolute;
+  left: 26px;
+  white-space: nowrap;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fecaca;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tactical-sos-beacon.dispatched .beacon-core-sos {
+  background: radial-gradient(circle, #60a5fa 0%, #2563eb 100%);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.8);
+}
+.tactical-sos-beacon.dispatched .pulse-ring-sos {
+  border-color: #3b82f6;
+}
+.tactical-sos-beacon.dispatched .beacon-tag {
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #bfdbfe;
+}
+
+.tactical-sos-beacon.resolved .beacon-core-sos {
+  background: radial-gradient(circle, #34d399 0%, #059669 100%);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+}
+.tactical-sos-beacon.resolved .pulse-ring-sos {
+  border-color: #10b981;
+}
+.tactical-sos-beacon.resolved .beacon-tag {
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #a7f3d0;
+}
+
+/* Citizen GPS Marker (Cyan Pulse) */
+.tactical-citizen-beacon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tactical-citizen-beacon .pulse-ring-cit {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #38bdf8;
+  animation: cit-ring-wave 2s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes cit-ring-wave {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.0); opacity: 0; }
+}
+
+.tactical-citizen-beacon .beacon-core-cit {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0284c7;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: #ffffff;
+}
+
+.tactical-citizen-beacon .beacon-tag-cit {
+  position: absolute;
+  left: 22px;
+  white-space: nowrap;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #e0f2fe;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* Shelters, Hospitals, Nodes, Responders */
+.tactical-facility-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: rgba(15, 23, 42, 0.92);
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.tactical-facility-badge:hover {
+  transform: scale(1.08);
+}
+.tactical-facility-badge.shelter {
+  border: 1px solid rgba(245, 158, 11, 0.6);
+  color: #fde68a;
+}
+.tactical-facility-badge.hospital {
+  border: 1px solid rgba(59, 130, 246, 0.6);
+  color: #93c5fd;
+}
+.tactical-facility-badge.node {
+  border: 1px solid rgba(16, 185, 129, 0.6);
+  color: #a7f3d0;
+}
+.tactical-facility-badge.responder {
+  border: 1px solid rgba(6, 182, 212, 0.6);
+  color: #a5f3fc;
+}
+
+/* Dispatch Control Drawer Form Elements */
+.cmd-drawer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cmd-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cmd-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cmd-form-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cmd-select, .cmd-input, .cmd-textarea {
+  background: #090e18;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 8px 10px;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.cmd-select:focus, .cmd-input:focus, .cmd-textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+}
+
+.cmd-action-btns-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.btn-cmd-transmit {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.84375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+}
+.btn-cmd-transmit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.5);
+}
+
+.btn-cmd-resolve {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  border-radius: 8px;
+  color: #34d399;
+  font-weight: 700;
+  font-size: 0.84375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-cmd-resolve:hover {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.btn-cmd-alert {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 8px;
+  color: #f87171;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-cmd-alert:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
