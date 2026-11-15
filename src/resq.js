@@ -99,14 +99,8 @@ function initUserSession() {
     session = null;
   }
 
-  // If no session and not explicit guest query, redirect to login
-  if (!session && !isGuestQuery) {
-    window.location.href = "login.html";
-    return false;
-  }
-
-  // If guest query without session, establish guest session
-  if (!session && isGuestQuery) {
+  // If no session, automatically establish guest session so map loads directly
+  if (!session) {
     session = {
       id: "GUEST-SOS-001",
       identifier: "Emergency Guest Access",

@@ -80,6 +80,7 @@
             </div>
           </div>
 
+          <a href="command.html" class="nav-item-link" style="color: #38bdf8; font-weight: 600;">🗺️ Live Map</a>
           <a href="#nodes-section" class="nav-item-link">IoT Nodes</a>
           <a href="#security-section" class="nav-item-link">Security & Trust</a>
           
@@ -95,8 +96,8 @@
             <span class="live-dot pulse"></span>
             <span class="status-label">Mesh: 48 Nodes Active</span>
           </div>
-          <a href="login.html" class="btn-pill btn-pill-ghost" id="open-citizen-btn">Open ResQ App ↗</a>
-          <a href="command-login.html" class="btn-pill btn-pill-white" id="nav-command-btn">Command Center 🔒</a>
+          <a href="resq.html" class="btn-pill btn-pill-ghost" id="open-citizen-btn">Open ResQ App ↗</a>
+          <a href="command.html" class="btn-pill btn-pill-white" id="nav-command-btn">Command Center 🗺️</a>
         </div>
       </nav>
     </header>
@@ -348,11 +349,14 @@
               <h3>Terminal Locked for Public Security</h3>
               <p>Under NDMA Incident Protocol, live responder dispatch and confidential trauma telemetry are restricted to verified disaster authorities.</p>
               <div class="lock-buttons-row">
-                <a href="command-login.html" class="btn-enter-gov-portal">
-                  <span>🏛️ Official Government Sign In &rarr;</span>
+                <button type="button" class="btn-enter-gov-portal" id="btn-quick-unlock-map" style="cursor: pointer; border: none; background: #2563eb;">
+                  <span>⚡ Instant Demo: Unlock Live Map &rarr;</span>
+                </button>
+                <a href="command.html" class="btn-enter-gov-portal" style="background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.15);">
+                  <span>🖥️ Full-Screen GIS Terminal &rarr;</span>
                 </a>
-                <a href="login.html" class="btn-goto-resq">
-                  <span>📱 ResQ Citizen Portal</span>
+                <a href="resq.html" class="btn-goto-resq">
+                  <span>📱 ResQ Citizen Map</span>
                 </a>
               </div>
             </div>

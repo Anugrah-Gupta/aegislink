@@ -157,8 +157,23 @@ function initGovernmentGate() {
       navCmdBtn.href = "command-login.html";
       navCmdBtn.innerHTML = `Command Center 🔒`;
     }
-    if (heroCmdBtn) heroCmdBtn.href = "command-login.html";
+    if (heroCmdBtn) heroCmdBtn.href = "command.html";
   }
+
+  // Quick Instant Demo Unlock on Landing Page
+  document.getElementById("btn-quick-unlock-map")?.addEventListener("click", () => {
+    const demoOfficer = {
+      id: "NDRF-CMD-881",
+      name: "Commander Sharma",
+      agency: "NDRF 8th Battalion",
+      agencyCode: "NDRF",
+      badge: "NDRF-CMD-881",
+      clearanceLevel: "Level 4 (Tactical Operations)"
+    };
+    localStorage.setItem("aegis_gov_session", JSON.stringify(demoOfficer));
+    initGovernmentGate();
+    showToast("Tactical GIS Map Unlocked for Live Demo", "🔓");
+  });
 
   document.getElementById("btn-lock-landing-console")?.addEventListener("click", () => {
     localStorage.removeItem("aegis_gov_session");

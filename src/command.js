@@ -45,11 +45,22 @@ const state = {
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. Verify Government Clearance Session
-  const sessionStr = localStorage.getItem("aegis_gov_session");
+  // 1. Verify Government Clearance Session (Auto-provision demo session for public evaluation)
+  let sessionStr = localStorage.getItem("aegis_gov_session");
   if (!sessionStr) {
-    window.location.href = "command-login.html";
-    return;
+    const demoOfficer = {
+      id: "NDRF-CMD-881",
+      name: "Commander Sharma",
+      agency: "NDRF 8th Battalion",
+      agencyCode: "NDRF",
+      badge: "NDRF-CMD-881",
+      clearanceLevel: "Level 4 (Tactical Operations)",
+      loginTime: new Date().toISOString(),
+      encryptedToken: "ED25519-GOV-982143",
+      airGapActive: true
+    };
+    localStorage.setItem("aegis_gov_session", JSON.stringify(demoOfficer));
+    sessionStr = JSON.stringify(demoOfficer);
   }
 
   const officer = JSON.parse(sessionStr);
